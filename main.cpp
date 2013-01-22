@@ -11,7 +11,6 @@
 #include <iostream>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
 using boost::make_shared;
@@ -34,8 +33,73 @@ static asio::io_service	io_service;
 // 用来连接avsocks服务器的地址!
 static hostaddress	avserver_address;
 
-class avclient;
-typedef boost::shared_ptr<avclient>	avclientptr;
+template < class T , class S1, class S2>
+class splicer : public boost::enable_shared_from_this<splicer<T,S1,S2> >{
+public:
+	typedef boost::shared_ptr<splicer>	pointer;
+	splicer(boost::shared_ptr<T> _owner, boost::shared_ptr<S1> _s1, boost::shared_ptr<S2> _s2)
+		:s1(_s1),s2(_s2),owner(_owner){}
+	void start(){
+		s1->async_read_some(s1s2buf.prepare(8192),
+			boost::bind(&splicer<T,S1,S2>::s1s2_handle_read,boost::enable_shared_from_this<splicer<T,S1,S2> >::shared_from_this(),asio::placeholders::error,asio::placeholders::bytes_transferred)
+		);
+		s2->async_read_some(s2s1buf.prepare(8192),
+			boost::bind(&splicer<T,S1,S2>::s2s1_handle_read,boost::enable_shared_from_this<splicer<T,S1,S2> >::shared_from_this(),asio::placeholders::error,asio::placeholders::bytes_transferred)
+		);
+	}
+	~splicer(){
+		
+	}
+private:
+	void s1s2_handle_read(const boost::system::error_code & ec, std::size_t bytes_transferred){
+		if(!ec){
+			s1s2buf.commit(bytes_transferred);
+			s2->async_write_some(s1s2buf.data(),
+				boost::bind(&splicer<T,S1,S2>::s1s2_handle_write,boost::enable_shared_from_this<splicer<T,S1,S2> >::shared_from_this(),asio::placeholders::error,asio::placeholders::bytes_transferred)
+			);
+		}
+		else{
+			boost::system::error_code ec;
+			s2->lowest_layer().shutdown(asio::socket_base::shutdown_both,ec);//->close();
+		}
+	}
+	void s1s2_handle_write(const boost::system::error_code & ec, std::size_t bytes_transferred){
+		if(!ec){
+			s1->async_read_some(s1s2buf.prepare(8192),
+				boost::bind(&splicer<T,S1,S2>::s1s2_handle_read,boost::enable_shared_from_this<splicer<T,S1,S2> >::shared_from_this(),asio::placeholders::error,asio::placeholders::bytes_transferred)
+			);
+		}else{
+			boost::system::error_code ec;
+			s2->lowest_layer().shutdown(asio::socket_base::shutdown_both,ec);
+		}
+	}
+	void s2s1_handle_read(const boost::system::error_code & ec, std::size_t bytes_transferred){
+		if(!ec){
+			s2s1buf.commit(bytes_transferred);
+			s1->async_write_some(s2s1buf.data(),
+				boost::bind(&splicer<T,S1,S2>::s2s1_handle_write,boost::enable_shared_from_this<splicer<T,S1,S2> >::shared_from_this(),asio::placeholders::error,asio::placeholders::bytes_transferred)
+			);
+		}else{
+			boost::system::error_code ec;
+			s1->lowest_layer().shutdown(asio::socket_base::shutdown_both,ec);
+		}
+	}
+	void s2s1_handle_write(const boost::system::error_code & ec, std::size_t bytes_transferred){
+		if(!ec){
+			s2->async_read_some(s2s1buf.prepare(8192),
+				boost::bind(&splicer<T,S1,S2>::s2s1_handle_read,boost::enable_shared_from_this<splicer<T,S1,S2> >::shared_from_this(),asio::placeholders::error,asio::placeholders::bytes_transferred)
+			);
+		}else{
+			boost::system::error_code ec;
+			s1->lowest_layer().shutdown(asio::socket_base::shutdown_both,ec);
+		}
+	}
+private:
+	asio::streambuf	s1s2buf,s2s1buf;
+	boost::shared_ptr<S1> s1; //两个 socket
+	boost::shared_ptr<S2> s2; //两个 socket
+	boost::shared_ptr<T>  owner;
+};
 
 /**
  * 通过使用 SYMBOL_HIDDEN 让这个类不要导出，减少ELF文件体积.
@@ -45,6 +109,8 @@ class avclient :
 	private boost::noncopyable
 {
 public:
+	typedef boost::shared_ptr<avclient>	avclientptr;
+
 	static avclientptr new_avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr = avserver_address);
 	avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr);
 	void start();
@@ -56,6 +122,7 @@ private:
 	void handle_ssl_handshake(const boost::system::error_code & ec) SYMBOL_HIDDEN;
 	void handle_avserver_connected(const boost::system::error_code & ec) SYMBOL_HIDDEN;
     void setup_ssl_cert() SYMBOL_HIDDEN;
+	void splice() SYMBOL_HIDDEN;
 private:
 
 	enum {
@@ -67,7 +134,7 @@ private:
 	socketptr			m_socket_client;
 	ip::tcp::socket		m_socket_server;
 	ssl::context		m_sslctx;
-	boost::scoped_ptr< ssl::stream<asio::ip::tcp::socket&> >
+	boost::shared_ptr< ssl::stream<asio::ip::tcp::socket&> >
 						m_sslstream;
 };
 
@@ -99,10 +166,10 @@ void avclient::typedetect(const boost::system::error_code& ec)
 	recv(fd,buffer,sizeof(buffer),MSG_PEEK|MSG_NOSIGNAL|MSG_DONTWAIT);
 
 	//检查 socks5
-	if(buffer[0]==0x05){
+	if(buffer[0]==0x05 || buffer[0] == 'G'){
 		m_type = AVCLIENT_TYPE_SOCKS5;
 		// 检测到 socks5 协议！，进入 client 模式，向 server 端发起SSL连接.
-
+		std::cout << "client mode" << std::endl;
 		m_sslstream.reset(new ssl::stream<ip::tcp::socket&>(m_socket_server, m_sslctx));
 		//异步发起到 vps server的连接，并开始读取client的第一个请求，依据请求来判定是 socks5 还是 HTTP 还是透明代理.
 		m_socket_server.async_connect(m_avsocks_serveraddress,boost::bind(&avclient::handle_avserver_connected,shared_from_this(),asio::placeholders::error));
@@ -122,6 +189,26 @@ void avclient::typedetect(const boost::system::error_code& ec)
 	}
 }
 
+// 将client的数据原封不动的发送给server，反过来也一样.
+// 这就叫做splice
+void avclient::splice()
+{
+	if(m_type != AVCLIENT_TYPE_SERVER){
+		boost::shared_ptr<splicer<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
+			splice(new splicer<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> >(shared_from_this(),m_socket_client,m_sslstream));
+		splice->start();
+// 		asio::streambuf	buf;
+// 		m_socket_client->async_read_some(buf.prepare(4096),
+// 			[&](const boost::system::error_code & ec, std::size_t byte){
+// 				buf.commit(byte);
+// 				m_sslstream->async_write_some(buf.data(),[](const boost::system::error_code & ec, std::size_t byte){});
+// 			}
+// 		);
+		
+	}
+}
+
+
 void avclient::handle_avserver_connected ( const boost::system::error_code& ec )
 {
 	if ( !ec ) {
@@ -138,9 +225,15 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 	if(!ec){
 		if(m_type == AVCLIENT_TYPE_SERVER){
 			//客户端已经被授权了，那么，开始处理吧，支持 SOCKS5 协议哦!
+ 			m_sslstream->write_some(asio::buffer("HTTP 200\n\n gaoji  ",17));
+// 			m_sslstream->lowest_layer(). close();
+//  			m_sslstream->lowest_layer().shutdown();
+//  			m_socket_server.lowest_layer().shutdown();
+			
+			
 		}else{
 			// splice过去, 协议的解析神码的都交给服务器来做就是了.
-			
+			splice();
 		}
 		//m_sslstream->write_some( asio::buffer("mabi",5) );//,[](const boost::system::error_code& ec){});
 	}else{
@@ -148,8 +241,7 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 	}
 }
 
-
-avclientptr avclient::new_avclient(asio::io_service& io_service, socketptr socket, hostaddress avserveraddr)
+avclient::avclientptr avclient::new_avclient(asio::io_service& io_service, socketptr socket, hostaddress avserveraddr)
 {
 	//先构造一个对象.
 	avclientptr p(new avclient(io_service,socket,avserveraddr));
