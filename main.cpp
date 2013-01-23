@@ -187,7 +187,7 @@ int main(int argc, char **argv)
 		( "port,p",		po::value<std::string>(&avserverport),		"server port" )
 		( "avserver",	po::value<std::string>(&avserveraddress),	"avsocks server address" )
 		( "daemon,d",	po::value<bool>(&dodaemon),					"go into daemon mode" )
-		( "listen,l",	po::value<std::string>(&localport),			"go into daemon mode" )
+		( "listen,l",	po::value<std::string>(&localport),			"local listen port" )
 		;
 
 	po::variables_map vm;
