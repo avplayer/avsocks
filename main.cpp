@@ -177,6 +177,7 @@ int main(int argc, char **argv)
 {
 	bool dodaemon = false;
     std::string avserverport = "4567";
+	std::string localport = "4567";
     std::string avserveraddress = "localhost";// = "avsocks.avplayer.org";//"fysj.com"
 
 	po::options_description desc("avsocks options");
@@ -186,6 +187,7 @@ int main(int argc, char **argv)
 		( "port,p",		po::value<std::string>(&avserverport),		"server port" )
 		( "avserver",	po::value<std::string>(&avserveraddress),	"avsocks server address" )
 		( "daemon,d",	po::value<bool>(&dodaemon),					"go into daemon mode" )
+		( "listen,l",	po::value<std::string>(&localport),			"go into daemon mode" )
 		;
 
 	po::variables_map vm;
@@ -206,7 +208,7 @@ int main(int argc, char **argv)
 	avserver_address = * dnsresolver(io_service).resolve(dnsresolver::query(avserveraddress,avserverport));
 	
 	//不论是 server还是client，都是使用的监听模式嘛。所以创建个 accepter 就可以了.
-	asio::ip::tcp::acceptor accepter(io_service,asio::ip::tcp::endpoint(asio::ip::tcp::v6(), boost::lexical_cast<int>(avserverport)));
+	asio::ip::tcp::acceptor accepter(io_service,asio::ip::tcp::endpoint(asio::ip::tcp::v6(), boost::lexical_cast<int>(localport)));
 
 	{socketptr avsocketclient(new asio::ip::tcp::socket(accepter.get_io_service()));
 	accepter.async_accept(*avsocketclient,boost::bind(&do_accept,boost::ref(accepter),avsocketclient,asio::placeholders::error));}
