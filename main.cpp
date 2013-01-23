@@ -175,7 +175,6 @@ static void do_accept(ip::tcp::acceptor &accepter,socketptr avsocketclient, cons
 
 int main(int argc, char **argv)
 {
-	bool dodaemon = false;
     std::string avserverport = "4567";
 	std::string localport = "4567";
     std::string avserveraddress = "localhost";// = "avsocks.avplayer.org";//"fysj.com"
@@ -186,7 +185,7 @@ int main(int argc, char **argv)
 		( "help,h",													"produce help message" )
 		( "port,p",		po::value<std::string>(&avserverport),		"server port" )
 		( "avserver",	po::value<std::string>(&avserveraddress),	"avsocks server address" )
-		( "daemon,d",	po::value<bool>(&dodaemon),					"go into daemon mode" )
+		( "daemon,d",												"go into daemon mode" )
 		( "listen,l",	po::value<std::string>(&localport),			"local listen port" )
 		;
 
@@ -213,7 +212,7 @@ int main(int argc, char **argv)
 	{socketptr avsocketclient(new asio::ip::tcp::socket(accepter.get_io_service()));
 	accepter.async_accept(*avsocketclient,boost::bind(&do_accept,boost::ref(accepter),avsocketclient,asio::placeholders::error));}
 
-	if(dodaemon)
+	if(vm.count("daemon")>0)
 		daemon(0,0);
 	return io_service.run()>0?0:1;
 }
