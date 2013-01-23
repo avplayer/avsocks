@@ -174,15 +174,6 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 	}
 }
 
-avclient::avclientptr avclient::new_avclient(asio::io_service& io_service, socketptr socket, hostaddress avserveraddr)
-{
-	//先构造一个对象.
-	avclientptr p(new avclient(io_service,socket,avserveraddr));
-	//立刻开始工作.
-	p->start();
-	return p;
-}
-
 static void do_accept(ip::tcp::acceptor &accepter,socketptr avsocketclient, const boost::system::error_code& ec)
 {
 	// socket对象
@@ -254,4 +245,13 @@ void avclient::setup_ssl_cert()
 	rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, 0, NULL);
 	SSL_CTX_use_RSAPrivateKey(CTX, rsa);
 	BIO_free_all(bio);
+}
+
+avclient::avclientptr avclient::new_avclient(asio::io_service& io_service, socketptr socket, hostaddress avserveraddr)
+{
+	//先构造一个对象.
+	avclientptr p(new avclient(io_service,socket,avserveraddr));
+	//立刻开始工作.
+	p->start();
+	return p;
 }
