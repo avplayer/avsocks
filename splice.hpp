@@ -51,7 +51,7 @@ private:
 	}
 	void s1s2_handle_write(const boost::system::error_code & ec, std::size_t bytes_transferred){
 		if(!ec){
-			s1s2buf.consume(s1s2buf.size());
+			s1s2buf.consume(bytes_transferred);
 			s1.async_read_some(s1s2buf.prepare(8192),
 				boost::bind(&splice<T,S1,S2>::s1s2_handle_read,BOOST_SHARED_THIS(splice),ASIO_READ_PLACEHOLDERS)
 			);
@@ -73,7 +73,7 @@ private:
 	}
 	void s2s1_handle_write(const boost::system::error_code & ec, std::size_t bytes_transferred){
 		if(!ec){
-			s2s1buf.consume(s2s1buf.size());
+			s2s1buf.consume(bytes_transferred);
 			s2.async_read_some(s2s1buf.prepare(8192),
 				boost::bind(&splice<T,S1,S2>::s2s1_handle_read,BOOST_SHARED_THIS(splice),ASIO_READ_PLACEHOLDERS)
 			);
