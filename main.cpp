@@ -99,7 +99,11 @@ void avclient::start()
 void avclient::typedetect(const boost::system::error_code& ec)
 {
 	uint8_t buffer[64]={0};
-	int fd = m_socket_client->native_handle();
+#if BOOST_VERSION >= 104300
+	int fd = m_socket_client->native_handle();// native_handle();
+#else
+	int fd = m_socket_client->native();
+#endif
 	//使用 msg_peek, 这样读取的数据并不会从接收缓冲区删除.
 	recv(fd,buffer,sizeof(buffer),MSG_PEEK|MSG_NOSIGNAL|MSG_DONTWAIT);
 
