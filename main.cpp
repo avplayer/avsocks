@@ -9,6 +9,7 @@
 #endif
 
 #include <iostream>
+#include <boost/version.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -210,7 +211,13 @@ void avclient::setup_ssl_cert()
 	m_sslctx.set_verify_mode(ssl::context::verify_none);
  	m_sslctx.set_options(ssl::context::default_workarounds|ssl::context::no_sslv2);
 
-	SSL_CTX *CTX = m_sslctx.native_handle();
+	
+	SSL_CTX *CTX;
+#if BOOST_VERSION >= 104600
+	CTX = m_sslctx.native_handle();
+#else
+	CTX = m_sslctx.impl();
+#endif
 	X509 *cert = NULL;
 	RSA *rsa = NULL;
 	BIO *bio = NULL;
