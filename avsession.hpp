@@ -125,11 +125,11 @@ private:
 		int port = ntohs( *(uint16_t*)(buffer+ s1readbuf.size()-2));
 		// 好的，目的地址和端口都获得了，执行DNS解析，链接，etc工作.
 
-		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
-		boost::shared_ptr<ip::tcp::resolver> resolver = boost::make_shared<ip::tcp::resolver>(s1.get_io_service());
-		resolver->async_resolve(query,
-			boost::bind(&avsession::handle_resolve_remote,BOOST_SHARED_THIS(avsession),resolver,asio::placeholders::error,asio::placeholders::iterator)
-		);
+ 		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
+ 		boost::shared_ptr<ip::tcp::resolver> resolver(new ip::tcp::resolver(s1.get_io_service()));
+// 		resolver->async_resolve(query,
+// 			boost::bind(&avsession::handle_resolve_remote,BOOST_SHARED_THIS(avsession),resolver,asio::placeholders::error,asio::placeholders::iterator)
+// 		);
 	}
 
 	void handle_resolve_remote(boost::shared_ptr<ip::tcp::resolver> resolver, const boost::system::error_code& ec, ip::tcp::resolver::iterator iterator){

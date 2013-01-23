@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(avsocks)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden")
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden")
 
 find_package(Boost REQUIRED thread program_options regex)
 find_package(OpenSSL REQUIRED)
