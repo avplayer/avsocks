@@ -69,7 +69,7 @@ private:
  				s1.async_write_some(asio::buffer("\005\000",2),
 					boost::bind(&avsession::handle_write,BOOST_SHARED_THIS(avsession),ASIO_WRITE_PLACEHOLDERS)
 				);
-				s1readbuf.consume(s1readbuf.size());
+				s1readbuf.consume(bytes_transferred);
 				s1.async_read_some(s1readbuf.prepare(5),
 					boost::bind(&avsession::handle_read_socks5_magic,BOOST_SHARED_THIS(avsession),ASIO_READ_PLACEHOLDERS)
 				);
@@ -81,14 +81,18 @@ private:
 	void handle_write(const boost::system::error_code & ec, std::size_t bytes_transferred){}
 
 	void handle_read_socks5_magic(const boost::system::error_code & ec, std::size_t bytes_transferred){
-		if( ec || bytes_transferred < 5)
+		if( ec || bytes_transferred < 5){
+			std::cout << ec.message() << std::endl;
 			return;
+		}			
 		s1readbuf.commit(bytes_transferred);
 		const uint8_t* buffer = asio::buffer_cast<const uint8_t*>(s1readbuf.data());
 
+
 		if(buffer[0]==5 && buffer[1] == 1)
 		{
-			switch(buffer[3])
+			int type = buffer[3];
+			switch(type)
 			{
 			case 1: // IPv4
 // 				g_socket_receive(socket,buffer,4,0,0);
