@@ -30,6 +30,7 @@ public:
 			boost::bind(&splice<T,S1,S2>::s2s1_handle_read,BOOST_SHARED_THIS(splice),ASIO_READ_PLACEHOLDERS)
 		);
 	}
+	
 	~splice(){
 
 	}
@@ -85,6 +86,7 @@ private:
 };
 
 #undef  ASIO_READ_PLACEHOLDERS
+#undef  ASIO_WRITE_PLACEHOLDERS
 #undef  BOOST_SHARED_THIS
 
 } // namespace avsocks.
