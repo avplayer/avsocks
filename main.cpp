@@ -76,8 +76,22 @@ private:
  * 真正的执行 proxy 任务的类，是个模板，这样就可以支持 SSL 和 raw socket.
  */
 template < class Towner, class S1, class S2 >
-class avsession : private boost::noncopyable{
-	
+class avsession
+	:public  boost::enable_shared_from_this<avsession<Towner,S1,S2> >,
+	 private boost::noncopyable
+{
+public:
+	avsession(boost::shared_ptr<Towner> _owner, S1& _s1, S2& _s2)
+	:s1(_s1),s2(_s2),owner(_owner){}
+
+	void start(){
+		
+	}
+
+private:
+	S1&							s1; //两个 socket
+	S2&							s2; //两个 socket
+	boost::shared_ptr<Towner>	owner; //确保 owner 不被析构掉.
 };
 
 avclient::avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr)
@@ -144,13 +158,10 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 	if(!ec){
 		if(m_type == AVCLIENT_TYPE_SERVER){
 			//客户端已经被授权了，那么，开始处理吧，支持 SOCKS5 协议哦!
-			
- 			m_sslstream->write_some(asio::buffer("HTTP 200\n\n gaoji  ",17));
-// 			m_sslstream->lowest_layer(). close();
-//  			m_sslstream->lowest_layer().shutdown();
-//  			m_socket_server.lowest_layer().shutdown();
-			
-			
+
+			boost::shared_ptr<avsession<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
+				session( new avsession<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> >(shared_from_this(),m_socket_server,*m_sslstream));
+			session->start();
 		}else{
 			// splice过去, 协议的解析神码的都交给服务器来做就是了.
 			boost::shared_ptr<avsocks::splice<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
