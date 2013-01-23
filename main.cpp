@@ -138,8 +138,8 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 		if(m_type == AVCLIENT_TYPE_SERVER){
 			//客户端已经被授权了，那么，开始处理吧，支持 SOCKS5 协议哦!
 
-			boost::shared_ptr<avsession<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
-				session( new avsession<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> >(shared_from_this(),m_socket_server,*m_sslstream));
+			boost::shared_ptr<avsession<avclient,ssl::stream<asio::ip::tcp::socket&>,ip::tcp::socket> >
+				session( new avsession<avclient,ssl::stream<asio::ip::tcp::socket&>,ip::tcp::socket>(shared_from_this(),*m_sslstream,m_socket_server));
 			session->start();
 		}else{
 			// splice过去, 协议的解析神码的都交给服务器来做就是了.
