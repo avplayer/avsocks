@@ -76,7 +76,11 @@ private:
 
 avclient::avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr)
 	:io_service(_io_service),m_socket_client(socket),m_avsocks_serveraddress(avserveraddr),
+#if BOOST_VERSION >= 104300
 	m_sslctx(ssl::context::sslv23),
+#else
+	m_sslctx(_io_service, ssl::context::sslv23),
+#endif
 	m_socket_server(_io_service)
 {
 	m_sslctx.set_verify_mode(ssl::context::verify_none);
