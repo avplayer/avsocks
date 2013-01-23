@@ -15,8 +15,6 @@
 #include <boost/asio.hpp>
 namespace asio = boost::asio;
 namespace ip = boost::asio::ip;
-
-#include "defer.hpp"
 	
 #define ASIO_READ_PLACEHOLDERS asio::placeholders::error, asio::placeholders::bytes_transferred
 #define ASIO_WRITE_PLACEHOLDERS asio::placeholders::error,asio::placeholders::bytes_transferred
