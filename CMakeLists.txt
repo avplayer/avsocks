@@ -13,7 +13,7 @@ endif()
 
 set(Boost_USE_MULTITHREADED      OFF)
 
-find_package(Boost REQUIRED thread system program_options regex)
+find_package(Boost REQUIRED system program_options regex)
 find_package(OpenSSL REQUIRED)
 find_package(Threads)
 
