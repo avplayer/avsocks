@@ -165,7 +165,7 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 		}else{
 			// splice过去, 协议的解析神码的都交给服务器来做就是了.
 			boost::shared_ptr<avsocks::splice<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
-				splice(new avsocks::splice<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> >(shared_from_this(),m_socket_client,m_sslstream));
+				splice(new avsocks::splice<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> >(shared_from_this(),*m_socket_client,*m_sslstream));
 			splice->start();
 		}
 		//m_sslstream->write_some( asio::buffer("mabi",5) );//,[](const boost::system::error_code& ec){});
