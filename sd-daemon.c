@@ -386,43 +386,6 @@ _sd_export_ int sd_is_socket_unix(int fd, int type, int listening, const char *p
         return 1;
 }
 
-_sd_export_ int sd_is_mq(int fd, const char *path) {
-#if !defined(__linux__)
-        return 0;
-#else
-        struct mq_attr attr;
-
-        if (fd < 0)
-                return -EINVAL;
-
-        if (mq_getattr(fd, &attr) < 0)
-                return -errno;
-
-        if (path) {
-                char fpath[PATH_MAX];
-                struct stat a, b;
-
-                if (path[0] != '/')
-                        return -EINVAL;
-
-                if (fstat(fd, &a) < 0)
-                        return -errno;
-
-                strncpy(stpcpy(fpath, "/dev/mqueue"), path, sizeof(fpath) - 12);
-                fpath[sizeof(fpath)-1] = 0;
-
-                if (stat(fpath, &b) < 0)
-                        return -errno;
-
-                if (a.st_dev != b.st_dev ||
-                    a.st_ino != b.st_ino)
-                        return 0;
-        }
-
-        return 1;
-#endif
-}
-
 _sd_export_ int sd_notify(int unset_environment, const char *state) {
 #if defined(DISABLE_SYSTEMD) || !defined(__linux__) || !defined(SOCK_CLOEXEC)
         return 0;

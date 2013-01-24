@@ -20,7 +20,7 @@ find_package(Threads)
 include_directories(${Boost_INCLUDE_DIRS})
 
 
-add_executable(avsocks main.cpp)
+add_executable(avsocks main.cpp sd-daemon.c)
 target_link_libraries(avsocks ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 install(TARGETS avsocks RUNTIME DESTINATION bin)

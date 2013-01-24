@@ -14,6 +14,7 @@
 #include <boost/version.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
 using boost::make_shared;
@@ -32,6 +33,8 @@ namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
 #include <boost/foreach.hpp>
+
+#include "sd-daemon.h"
 
 #include "splice.hpp"
 #include "avsession.hpp"
@@ -209,7 +212,6 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 }
 
 #include "cert.hpp"	// 引入证书和私钥数据.
-#include "../hm/pch.hpp"
 
 void avclient::setup_ssl_cert()
 {
@@ -316,13 +318,29 @@ int main(int argc, char **argv)
 	avserver_address = *dnsresolver(io_service).resolve(dnsresolver::query(avserveraddress, avserverport));
 
 	// 不论是 server还是client，都是使用的监听模式嘛。所以创建个 accepter 就可以了.
-	asio::ip::tcp::acceptor accepter(io_service,
-		asio::ip::tcp::endpoint(is_ipv6 ? asio::ip::tcp::v6() : asio::ip::tcp::v4(), boost::lexical_cast<int>(localport)));
+	boost::scoped_ptr<asio::ip::tcp::acceptor> accepter;
+#ifdef __linux__
+	if( sd_listen_fds(0) > 0 ){
+		ip::tcp::socket::native_handle_type fd = sd_listen_fds(1);
+		if( sd_is_socket(fd,AF_INET6,SOCK_STREAM,1)) // ipv6 协议
+		{
+			accepter.reset( new ip::tcp::acceptor(io_service, asio::ip::tcp::v6(),fd));
+		}
+		else if(sd_is_socket(fd,AF_INET,SOCK_STREAM,1)) // ipv4 协议
+		{
+			accepter.reset( new ip::tcp::acceptor(io_service, asio::ip::tcp::v4(),fd));
+		}else{
+			std::cerr << "invalid socket passed by systemd" << std::endl;
+			return 1;
+		}
+	}else
+#endif // windows 下自带 fallback 过去就是用这个了.
+		accepter.reset( new ip::tcp::acceptor(io_service,ip::tcp::endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport))));
 
 	{
-		socketptr avsocketclient(new asio::ip::tcp::socket(accepter.get_io_service()));
-		accepter.async_accept(*avsocketclient,
-			boost::bind(&do_accept, boost::ref(accepter), avsocketclient, asio::placeholders::error));
+		socketptr avsocketclient(new asio::ip::tcp::socket(accepter->get_io_service()));
+		accepter->async_accept(*avsocketclient,
+			boost::bind(&do_accept, boost::ref(*accepter), avsocketclient, asio::placeholders::error));
 	}
 
 #ifndef WIN32
