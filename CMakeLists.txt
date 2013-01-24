@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(avsocks)
 
+set(CMAKE_INSTALL_PREFIX /usr)
+
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden")
 
 
@@ -24,4 +26,6 @@ add_executable(avsocks main.cpp sd-daemon.c)
 target_link_libraries(avsocks ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 install(TARGETS avsocks RUNTIME DESTINATION bin)
-install(FILES avsocks.service avsocks.socket DESTINATION lib/systemd/system)
+
+install(FILES avsocks.service DESTINATION lib/systemd/system)
+install(FILES avsocks.socket DESTINATION lib/systemd/system)

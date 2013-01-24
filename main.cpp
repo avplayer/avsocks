@@ -70,7 +70,6 @@ public:
 public:
 	// avclient构造析构函数.
 	avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr);
-    ~avclient() { std::cout << "avclient deleted" << std::endl; }
 
 	// 创建一个avclient对象, 并进入工作.
 	static void new_avclient(asio::io_service& _io_service,
@@ -322,12 +321,12 @@ int main(int argc, char **argv)
 #ifdef __linux__
 	if( sd_listen_fds(0) > 0 ){
 		ip::tcp::socket::native_handle_type fd = sd_listen_fds(1);
-		if( sd_is_socket(fd,AF_INET6,SOCK_STREAM,1)) // ipv6 协议
+		if( sd_is_socket(fd,AF_INET6,SOCK_STREAM,1)) // ipv6 协议.
 		{
             std::cout << "v6" <<std::endl;
 			acceptor.assign( asio::ip::tcp::v6(), fd);
 		}
-		else if(sd_is_socket(fd,AF_INET,SOCK_STREAM,1)) // ipv4 协议
+		else if(sd_is_socket(fd,AF_INET,SOCK_STREAM,1)) // ipv4 协议.
 		{
             std::cout << "v4" <<std::endl;
 			acceptor.assign( asio::ip::tcp::v4(), fd);
