@@ -1,8 +1,9 @@
 [Unit]
 Description=Fuck the gfw
 
-[Service]
-ListenStream=127.0.0.1:4567
+[Socket]
+ListenStream=4567
+Service=avsocks.service
 
 [Install]
 WantedBy=sockets.target

@@ -24,4 +24,4 @@ add_executable(avsocks main.cpp sd-daemon.c)
 target_link_libraries(avsocks ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 install(TARGETS avsocks RUNTIME DESTINATION bin)
-install(FILES avsocks.service DESTINATION lib/systemd/system)
+install(FILES avsocks.service avsocks.socket DESTINATION lib/systemd/system)
