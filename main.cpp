@@ -46,12 +46,12 @@ static hostaddress avserver_address;
 // 如果是socks5连接, 则将启动avsession; 如果是ssl, 则转发数据到远程server中.
 //
 // Fuck墙的工程流程大致如下图所示:
-//
+//   
 //                   +---------------+     |     +-------------+
 //   browser/app --> | socks5 -> ssl | ----|---> | ssl -> sock |--> website/server
 //                   +---------------+     |     +-------------+
 //                                        GFW
-//
+//   
 class avclient
 	: public boost::enable_shared_from_this<avclient>
 	, private boost::noncopyable
@@ -196,7 +196,6 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 				splice(new avsocks::splice<avclient, ip::tcp::socket, ssl::stream<asio::ip::tcp::socket&> > (shared_from_this(), *m_socket_client, *m_sslstream));
 			splice->start();
 		}
-		// m_sslstream->write_some( asio::buffer("mabi",5) );//,[](const boost::system::error_code& ec){});
 	}
 	else
 	{
@@ -267,16 +266,18 @@ int main(int argc, char **argv)
     std::string avserverport = "4567";
 	std::string localport = "4567";
     std::string avserveraddress = "localhost";// = "avsocks.avplayer.org";//"fysj.com"
+	bool is_ipv6 = false;
 
 	po::options_description desc("avsocks options");
 	desc.add_options()
-	    ( "version,v",												"output version" )
-		( "help,h",													"produce help message" )
-		( "port,p",		po::value<std::string>(&avserverport),		"server port" )
-		( "avserver",	po::value<std::string>(&avserveraddress),	"avsocks server address" )
-		( "daemon,d",												"go into daemon mode" )
-		( "listen,l",	po::value<std::string>(&localport),			"local listen port" )
-		;
+		( "version,v",																			"output version" )
+		( "help,h",																				"produce help message" )
+		( "port,p",		po::value<std::string>(&avserverport)->default_value("4567"),			"server port" )
+		( "avserver",	po::value<std::string>(&avserveraddress)->default_value("localhost"),	"avsocks server address" )
+		( "listen,l",	po::value<std::string>(&localport)->default_value("4567"),				"local listen port" )
+		( "ipv6",		po::value<bool>(&is_ipv6)->default_value(false),						"is ipv6" )
+		( "daemon,d",																			"go into daemon mode" )
+	;
 
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -297,7 +298,7 @@ int main(int argc, char **argv)
 
 	// 不论是 server还是client，都是使用的监听模式嘛。所以创建个 accepter 就可以了.
 	asio::ip::tcp::acceptor accepter(io_service,
-		asio::ip::tcp::endpoint(asio::ip::tcp::v6(), boost::lexical_cast<int>(localport)));
+		asio::ip::tcp::endpoint(is_ipv6 ? asio::ip::tcp::v6() : asio::ip::tcp::v4(), boost::lexical_cast<int>(localport)));
 
 	{
 		socketptr avsocketclient(new asio::ip::tcp::socket(accepter.get_io_service()));
