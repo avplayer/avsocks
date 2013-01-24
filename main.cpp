@@ -28,6 +28,11 @@ namespace ssl = asio::ssl;
 namespace po = boost::program_options;
 #include <boost/lexical_cast.hpp>
 
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+
+#include <boost/foreach.hpp>
+
 #include "splice.hpp"
 #include "avsession.hpp"
 
@@ -204,6 +209,7 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 }
 
 #include "cert.hpp"	// 引入证书和私钥数据.
+#include "../hm/pch.hpp"
 
 void avclient::setup_ssl_cert()
 {
@@ -275,14 +281,22 @@ int main(int argc, char **argv)
 		( "port,p",		po::value<std::string>(&avserverport)->default_value("4567"),			"server port" )
 		( "avserver",	po::value<std::string>(&avserveraddress)->default_value("localhost"),	"avsocks server address" )
 		( "listen,l",	po::value<std::string>(&localport)->default_value("4567"),				"local listen port" )
-		( "ipv6",		po::value<bool>(&is_ipv6)->default_value(false),						"is ipv6" )
+		( "ipv6,6",		po::value<bool>(&is_ipv6)->default_value(false),						"is ipv6" )
 		( "daemon,d",																			"go into daemon mode" )
 	;
 
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
+    
+    fs::path config_files[] = {"/etc/avsocks.conf", fs::path(getenv("HOME")) / ".avsocks.conf", "./avsocks.conf"};
+    BOOST_FOREACH(fs::path config_file, config_files)
+    {
+        if (fs::exists(config_file)) {
+            po::store(po::parse_config_file<char>(config_file.c_str(), desc), vm);
+        }
+    }
 	po::notify(vm);
-
+    
 	if (vm.count("help"))
 	{
 		std::cerr <<  desc <<  std::endl;
