@@ -1,8 +1,0 @@
-[Unit]
-Description=Fuck the gfw
-
-[Service]
-ListenStream=127.0.0.1:11080
-
-[Install]
-WantedBy=sockets.target

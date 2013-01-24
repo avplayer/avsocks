@@ -1,8 +1,0 @@
-[Unit]
-Description=Fuck the gfw
-
-[Service]
-ExecStart=/usr/bin/newsocks --config=/etc/newsocks.ini
-
-[Install]
-WantedBy=multi-user.target
