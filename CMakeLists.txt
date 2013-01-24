@@ -24,3 +24,4 @@ add_executable(avsocks main.cpp)
 target_link_libraries(avsocks ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 install(TARGETS avsocks RUNTIME DESTINATION bin)
+install(FILES avsocks.service DESTINATION lib/systemd/system)
