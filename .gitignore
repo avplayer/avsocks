@@ -164,3 +164,6 @@ pip-log.txt
 .DS_Store
 
 newsocks
+
+avsocks
+.kdev4
