@@ -19,8 +19,6 @@ namespace ip = boost::asio::ip;
 #define ASIO_READ_PLACEHOLDERS asio::placeholders::error, asio::placeholders::bytes_transferred
 #define ASIO_WRITE_PLACEHOLDERS asio::placeholders::error,asio::placeholders::bytes_transferred
 
-#define BOOST_SHARED_THIS(classname) boost::enable_shared_from_this<classname<Towner,S1,S2> >::shared_from_this()
-
 /**
  * 真正的执行 proxy 任务的类，是个模板，这样就可以支持 SSL 和 raw socket.
  * 起码使用 owner 技术，确保 avclient 类不被析构掉.
@@ -33,7 +31,7 @@ class avsession
 	:public  boost::enable_shared_from_this<avsession<Towner,S1,S2> >,
 	 private boost::noncopyable
 {
-
+	using boost::enable_shared_from_this<avsession<Towner,S1,S2> >::shared_from_this;
 public:
 	avsession(boost::shared_ptr<Towner> _owner, S1& _s1, S2& _s2)
 	:s1(_s1),s2(_s2),owner(_owner){}
@@ -42,7 +40,7 @@ public:
 		// 读取第一个数据包，以确定客户端需要链接的目的地.
  		s1.async_read_some(
  			s1readbuf.prepare(64),
- 			boost::bind(&avsession::handle_socks5_read,boost::enable_shared_from_this<avsession<Towner,S1,S2> >::shared_from_this(),ASIO_READ_PLACEHOLDERS)
+ 			boost::bind(&avsession::handle_socks5_read,shared_from_this(),ASIO_READ_PLACEHOLDERS)
  		);
 	}
 
@@ -65,11 +63,11 @@ private:
 				return ;
  			case 0: // 没认证，很好
  				s1.async_write_some(asio::buffer("\005\000",2),
-					boost::bind(&avsession::handle_write,BOOST_SHARED_THIS(avsession),ASIO_WRITE_PLACEHOLDERS)
+					boost::bind(&avsession::handle_write,shared_from_this(),ASIO_WRITE_PLACEHOLDERS)
 				);
 				s1readbuf.consume(bytes_transferred);
 				s1.async_read_some(s1readbuf.prepare(5),
-					boost::bind(&avsession::handle_read_socks5_magic,BOOST_SHARED_THIS(avsession),ASIO_READ_PLACEHOLDERS)
+					boost::bind(&avsession::handle_read_socks5_magic,shared_from_this(),ASIO_READ_PLACEHOLDERS)
 				);
   				return ;
  			}
@@ -104,7 +102,7 @@ private:
 					int dnshost_len = buffer[4]+2;
 					s1readbuf.consume(s1readbuf.size());
 					s1.async_read_some(s1readbuf.prepare(dnshost_len),
-						boost::bind(&avsession::handle_read_socks5_dnshost,BOOST_SHARED_THIS(avsession),ASIO_READ_PLACEHOLDERS)
+						boost::bind(&avsession::handle_read_socks5_dnshost,shared_from_this(),ASIO_READ_PLACEHOLDERS)
 					);
 				}
  				break;
@@ -126,7 +124,7 @@ private:
  		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
  		boost::shared_ptr<ip::tcp::resolver> resolver(new ip::tcp::resolver(s1.get_io_service()));
  		resolver->async_resolve(query,
- 			boost::bind(&avsession::handle_resolve_remote,BOOST_SHARED_THIS(avsession),resolver,asio::placeholders::error,asio::placeholders::iterator)
+ 			boost::bind(&avsession::handle_resolve_remote,shared_from_this(),resolver,asio::placeholders::error,asio::placeholders::iterator)
  		);
 	}
 
@@ -136,7 +134,7 @@ private:
 		}else{
 			// 链接到服务器.
 			s2.async_connect(*iterator,
-				boost::bind(&avsession::handle_remote_connected,BOOST_SHARED_THIS(avsession),asio::placeholders::error)
+				boost::bind(&avsession::handle_remote_connected,shared_from_this(),asio::placeholders::error)
 			);
 		}
 	}
@@ -148,7 +146,7 @@ private:
 		{
 			// 向 client 返回链接成功信息.
 			s1.async_write_some(asio::buffer("\005\000\000\001\000\000\000\000\000\000",10),
-				boost::bind(&avsession::handle_write_socks5_ok,BOOST_SHARED_THIS(avsession),ASIO_WRITE_PLACEHOLDERS)
+				boost::bind(&avsession::handle_write_socks5_ok,shared_from_this(),ASIO_WRITE_PLACEHOLDERS)
 			);
 			
 		}
@@ -171,4 +169,3 @@ private:
 
 #undef  ASIO_READ_PLACEHOLDERS
 #undef  ASIO_WRITE_PLACEHOLDERS
-#undef  BOOST_SHARED_THIS
