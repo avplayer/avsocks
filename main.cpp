@@ -123,7 +123,7 @@ void avclient::start()
 
 void avclient::typedetect(const boost::system::error_code& ec)
 {
-	uint8_t buffer[64]={0};
+	boost::uint8_t buffer[64]={0};
 #if BOOST_VERSION >= 104300
 	int fd = m_socket_client->native_handle();// native_handle();
 #else
@@ -131,7 +131,11 @@ void avclient::typedetect(const boost::system::error_code& ec)
 #endif
 
 	// 使用 msg_peek, 这样读取的数据并不会从接收缓冲区删除.
+#ifdef WIN32
+	recv(fd, (char*)buffer, sizeof(buffer), MSG_PEEK);
+#else
 	recv(fd, buffer, sizeof(buffer), MSG_PEEK|MSG_NOSIGNAL|MSG_DONTWAIT);
+#endif // WIN32
 
 	// 检查 socks5.
 	if(buffer[0] == 0x05 || buffer[0] == 'G')
@@ -301,8 +305,10 @@ int main(int argc, char **argv)
 			boost::bind(&do_accept, boost::ref(accepter), avsocketclient, asio::placeholders::error));
 	}
 
+#ifndef WIN32
 	if(vm.count("daemon")>0)
 		daemon(0, 0);
+#endif // WIN32
 
 	return io_service.run() > 0 ? 0 : 1;
 }

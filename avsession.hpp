@@ -49,7 +49,7 @@ public:
 private:
 	void handle_socks5_read(const boost::system::error_code & ec, std::size_t bytes_transferred){
 		s1readbuf.commit(bytes_transferred);
-		const uint8_t* buffer = asio::buffer_cast<const uint8_t*>(s1readbuf.data());
+		const boost::uint8_t* buffer = asio::buffer_cast<const boost::uint8_t*>(s1readbuf.data());
 		if(ec)
 			return;
 
@@ -84,7 +84,7 @@ private:
 			return;
 		}			
 		s1readbuf.commit(bytes_transferred);
-		const uint8_t* buffer = asio::buffer_cast<const uint8_t*>(s1readbuf.data());
+		const boost::uint8_t* buffer = asio::buffer_cast<const boost::uint8_t*>(s1readbuf.data());
 
 
 		if(buffer[0]==5 && buffer[1] == 1)
@@ -120,7 +120,7 @@ private:
 
 		std::string		host;
 		host.assign(buffer,s1readbuf.size()-2);
-		int port = ntohs( *(uint16_t*)(buffer+ s1readbuf.size()-2));
+		int port = ntohs( *(boost::uint16_t*)(buffer+ s1readbuf.size()-2));
 		// 好的，目的地址和端口都获得了，执行DNS解析，链接，etc工作.
 
  		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
