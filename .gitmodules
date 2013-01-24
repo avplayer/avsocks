@@ -1,3 +1,0 @@
-[submodule "github.com/kless/goconfig"]
-	path = github.com/kless/goconfig
-	url = git://github.com/kless/goconfig.git
