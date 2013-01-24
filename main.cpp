@@ -70,7 +70,6 @@ public:
 public:
 	// avclient构造析构函数.
 	avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr);
-    ~avclient() { std::cout << "avclient deleted" << std::endl; }
 
 	// 创建一个avclient对象, 并进入工作.
 	static void new_avclient(asio::io_service& _io_service,
