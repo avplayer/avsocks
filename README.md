@@ -16,3 +16,5 @@ avsocks 科学操长城软件，由2部分构成，一个运行在能科学上�
 
 依赖 boost 和 openssl
 
+备注: 在win32平台下编译应程序, 需要从 avplayer 项目中的 third_party 复制到源码所在目录, 就可以了.
+
