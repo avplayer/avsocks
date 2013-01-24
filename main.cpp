@@ -319,7 +319,7 @@ int main(int argc, char **argv)
 
 	// 不论是 server还是client，都是使用的监听模式嘛。所以创建个 accepter 就可以了.
 	boost::scoped_ptr<asio::ip::tcp::acceptor> accepter;
-#ifdef __linux__
+
 	if( sd_listen_fds(0) > 0 ){
 		ip::tcp::socket::native_handle_type fd = sd_listen_fds(1);
 		if( sd_is_socket(fd,AF_INET6,SOCK_STREAM,1)) // ipv6 协议.
@@ -334,7 +334,6 @@ int main(int argc, char **argv)
 			return 1;
 		}
 	}else
-#endif // windows 下自带 fallback 过去就是用这个了.
 		accepter.reset( new ip::tcp::acceptor(io_service,ip::tcp::endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport))));
 
 	{
