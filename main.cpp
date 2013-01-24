@@ -322,11 +322,11 @@ int main(int argc, char **argv)
 #ifdef __linux__
 	if( sd_listen_fds(0) > 0 ){
 		ip::tcp::socket::native_handle_type fd = sd_listen_fds(1);
-		if( sd_is_socket(fd,AF_INET6,SOCK_STREAM,1)) // ipv6 协议
+		if( sd_is_socket(fd,AF_INET6,SOCK_STREAM,1)) // ipv6 协议.
 		{
 			accepter.reset( new ip::tcp::acceptor(io_service, asio::ip::tcp::v6(),fd));
 		}
-		else if(sd_is_socket(fd,AF_INET,SOCK_STREAM,1)) // ipv4 协议
+		else if(sd_is_socket(fd,AF_INET,SOCK_STREAM,1)) // ipv4 协议.
 		{
 			accepter.reset( new ip::tcp::acceptor(io_service, asio::ip::tcp::v4(),fd));
 		}else{
