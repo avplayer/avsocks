@@ -49,7 +49,6 @@ public:
 			// 下载文件.
 		}
 	}
-	
 
 private:
 	asio::io_service & io_service;
