@@ -10,6 +10,7 @@
 #include <ctime>
 #include <fstream>
 
+#include <boost/noncopyable.hpp>
 #include <boost/regex.hpp>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
@@ -24,7 +25,8 @@ namespace fs = boost::filesystem;
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 
-class gfwlist{
+
+class gfwlist : protected boost::noncopyable{
 public:
 	// 默认构造文件.
 	gfwlist(asio::io_service & _io_service):io_service(_io_service), m_urdl(io_service){
