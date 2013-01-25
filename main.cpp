@@ -324,7 +324,7 @@ int main(int argc, char **argv)
 #ifdef __linux__
 
 	if ( sd_listen_fds ( 0 ) > 0 ) {
-		ip::tcp::socket::native_handle_type fd = sd_listen_fds ( 1 );
+		ip::tcp::socket::native_handle_type fd = sd_listen_fds ( 1 ) + SD_LISTEN_FDS_START;
 
 		if ( sd_is_socket ( fd, AF_INET6, SOCK_STREAM, 1 ) ) { // ipv6 协议.
 			std::cout << "v6" << std::endl;
