@@ -33,6 +33,7 @@ namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
 #include <boost/foreach.hpp>
+#include <boost/thread.hpp>
 
 #include "sd-daemon.h"
 
@@ -44,7 +45,6 @@ typedef boost::shared_ptr< asio::ip::tcp::socket > socketptr;
 typedef asio::ip::tcp::resolver dnsresolver;
 typedef asio::ip::tcp::endpoint	hostaddress;
 
-static asio::io_service	io_service;
 // 用来连接avsocks服务器的地址!
 static hostaddress avserver_address;
 
@@ -104,7 +104,6 @@ private:
 	ssl::context		m_sslctx;
 	boost::shared_ptr<ssl::stream<asio::ip::tcp::socket&> > m_sslstream;
 };
-
 
 // 下面是avclient的具体实现.
 
@@ -251,32 +250,40 @@ void avclient::new_avclient(asio::io_service& io_service,
 }
 
 
-// 一个简单的accept服务器, 用于不停的异步接受客户端的连接, 连接可能是socks5连接或ssl加密数据连接.
-static
-void do_accept(ip::tcp::acceptor &accepter, socketptr avsocketclient, const boost::system::error_code &ec)
+#include "ui.hpp"
+
+void avsocks_ui::on_start(wxCommandEvent &event)
 {
-	// socket对象
-	if(!ec)
-	{
-		// 使得这个avsocketclient构造一个avclient对象, 并start进入工作.
-		avclient::new_avclient(io_service, avsocketclient);
-	}
+    task_bar_.reset(new task_bar(this));
 
-	// 创建新的socket, 进入侦听, .
-	avsocketclient.reset(new ip::tcp::socket(accepter.get_io_service()));
-	accepter.async_accept(*avsocketclient,
-		boost::bind(&do_accept, boost::ref(accepter), avsocketclient, asio::placeholders::error));
-}
+    task_bar_->SetIcon(wxIcon(wxT("application_icon")),wxT("avsocks 0.1"));
 
-
-int main(int argc, char **argv)
-{
+    if (start_button_->GetLabel()!=wxT("start"))
+    {
+        server_port_->Enable(true);
+        server_ip_->Enable(true);
+        server_mode_->Enable(true);
+        stop_=true;
+        boost::system::error_code ec;
+        acceptor_.close(ec);
+        socket_->close(ec);
+        io_.stop();
+        start_button_->SetLabel(wxT("start"));
+        return;
+    }
+    this->Hide();
+    start_button_->SetLabel(wxT("stop"));
+    server_port_->Enable(false);
+    server_ip_->Enable(false);
+    server_mode_->Enable(false);
+    stop_=false;
 	std::string avserverport;
-	std::string localport;
-	std::string avserveraddress; // = "avsocks.avplayer.org";//"fysj.com"
+	std::string localport="4567";
+    std::string avserveraddress; // = "avsocks.avplayer.org";//"fysj.com"
 	bool is_ipv6 = false;
-	std::string authtoken;
+	std::string authtoken="";
 
+/*  暂时注释掉
 	po::options_description desc("avsocks options");
 	desc.add_options()
 		( "version,v",																			"output version" )
@@ -316,12 +323,22 @@ int main(int argc, char **argv)
 	{
 		std::cout << "avsocks version " << "0.1" << std::endl;
 	}
+*/
+    avserveraddress=server_ip_->IsEnabled()?server_ip_->GetValue().mb_str():"localhost";
+    avserverport=server_port_->GetValue().Length()==0?"4567":server_port_->GetValue().mb_str();
 
 	// 解析 avsocks 服务器地址.
-	avserver_address = *dnsresolver(io_service).resolve(dnsresolver::query(avserveraddress, avserverport));
+    try
+    {
+        avserver_address = *dnsresolver(io_).resolve(dnsresolver::query(avserveraddress, avserverport));
+    }
+    catch(...)
+    {
+        wxMessageBox(wxT("dns resolve error"));
+        return;
+    }
 
-	// 不论是 server还是client，都是使用的监听模式嘛。所以创建个 accepter 就可以了.
-	asio::ip::tcp::acceptor acceptor(io_service);
+
 #ifdef __linux__
 
 	if ( sd_listen_fds ( 0 ) > 0 ) {
@@ -341,21 +358,39 @@ int main(int argc, char **argv)
 #endif // windows 下自带 fallback 过去就是用这个了.
 	{
 		ip::tcp::endpoint endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport));
-		acceptor.open( endpoint.protocol());
-		acceptor.bind( endpoint);
-		acceptor.listen();
+        boost::system::error_code ec;
+		acceptor_.open( endpoint.protocol(),ec);
+        if (ec)
+        {
+            wxString err = wxString( ec.message().c_str(), wxConvUTF8);
+            wxMessageBox(err);
+            return;
+        }
+		acceptor_.bind( endpoint,ec);
+        if (ec)
+        {
+            wxString err = wxString( ec.message().c_str(), wxConvUTF8);
+            wxMessageBox(err);
+            return;
+        }
+        acceptor_.listen(boost::asio::socket_base::max_connections,ec);
+        if (ec)
+        {
+            wxString err = wxString( ec.message().c_str(), wxConvUTF8);
+            wxMessageBox(err);
+            return;
+        }
 	}
     
 	{
-		socketptr avsocketclient(new asio::ip::tcp::socket(acceptor.get_io_service()));
-		acceptor.async_accept(*avsocketclient,
-			boost::bind(&do_accept, boost::ref(acceptor), avsocketclient, asio::placeholders::error));
+		socket_.reset(new asio::ip::tcp::socket(acceptor_.get_io_service()));
+		acceptor_.async_accept(*socket_,
+            boost::bind(&avsocks_ui::do_accept,this, boost::ref(acceptor_), socket_, asio::placeholders::error));
 	}
 
 #ifndef WIN32
 	if(vm.count("daemon")>0)
 		daemon(0, 0);
 #endif // WIN32
-
-	return io_service.run() > 0 ? 0 : 1;
+    boost::thread td(boost::bind(&boost::asio::io_service::run,boost::ref(io_)));
 }
