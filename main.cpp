@@ -274,6 +274,7 @@ int main(int argc, char **argv)
 	std::string localport;
 	std::string avserveraddress; // = "avsocks.avplayer.org";//"fysj.com"
 	bool is_ipv6 = false;
+	std::string authtoken;
 
 	po::options_description desc("avsocks options");
 	desc.add_options()
@@ -284,6 +285,7 @@ int main(int argc, char **argv)
 		( "listen,l",	po::value<std::string>(&localport)->default_value("4567"),				"local listen port" )
 		( "ipv6,6",		po::value<bool>(&is_ipv6)->default_value(false),						"is ipv6" )
 		( "daemon,d",																			"go into daemon mode" )
+		( "auth",		po::value<std::string>(&authtoken),										"username:password pair" )
 	;
 
 	po::variables_map vm;
