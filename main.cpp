@@ -33,6 +33,7 @@ namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
 #include <boost/foreach.hpp>
+#include <map>
 
 #include "sd-daemon.h"
 
@@ -43,6 +44,7 @@ namespace fs = boost::filesystem;
 typedef boost::shared_ptr< asio::ip::tcp::socket > socketptr;
 typedef asio::ip::tcp::resolver dnsresolver;
 typedef asio::ip::tcp::endpoint	hostaddress;
+typedef std::map<std::string, std::string> configuration;
 
 static asio::io_service	io_service;
 // 用来连接avsocks服务器的地址!
@@ -70,10 +72,10 @@ public:
 
 public:
 	// avclient构造析构函数.
-	avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr);
+	avclient(asio::io_service& _io_service, configuration& config, socketptr socket, hostaddress avserveraddr);
 
 	// 创建一个avclient对象, 并进入工作.
-	static void new_avclient(asio::io_service& _io_service,
+	static void new_avclient(asio::io_service& _io_service, configuration& config,
 		socketptr socket, hostaddress avserveraddr = avserver_address);
 
 	// 启动avclient工作.
@@ -103,12 +105,13 @@ private:
 	ip::tcp::socket		m_socket_server;
 	ssl::context		m_sslctx;
 	boost::shared_ptr<ssl::stream<asio::ip::tcp::socket&> > m_sslstream;
+	configuration&		m_config;
 };
 
 
 // 下面是avclient的具体实现.
 
-avclient::avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr)
+avclient::avclient(asio::io_service& _io_service, configuration& config, socketptr socket, hostaddress avserveraddr)
 	: io_service(_io_service)
 	, m_socket_client(socket)
 	, m_avsocks_serveraddress(avserveraddr)
@@ -118,6 +121,7 @@ avclient::avclient(asio::io_service& _io_service, socketptr socket, hostaddress 
 	, m_sslctx(_io_service, ssl::context::sslv23)
 #endif
 	, m_socket_server(_io_service)
+	, m_config(config)
 {}
 
 void avclient::start()
@@ -253,19 +257,19 @@ void avclient::new_avclient(asio::io_service& io_service,
 
 // 一个简单的accept服务器, 用于不停的异步接受客户端的连接, 连接可能是socks5连接或ssl加密数据连接.
 static
-void do_accept(ip::tcp::acceptor &accepter, socketptr avsocketclient, const boost::system::error_code &ec)
+void do_accept(ip::tcp::acceptor &accepter, configuration& config, socketptr avsocketclient, const boost::system::error_code &ec)
 {
 	// socket对象
 	if(!ec)
 	{
 		// 使得这个avsocketclient构造一个avclient对象, 并start进入工作.
-		avclient::new_avclient(io_service, avsocketclient);
+		avclient::new_avclient(io_service, config, avsocketclient);
 	}
 
 	// 创建新的socket, 进入侦听, .
 	avsocketclient.reset(new ip::tcp::socket(accepter.get_io_service()));
 	accepter.async_accept(*avsocketclient,
-		boost::bind(&do_accept, boost::ref(accepter), avsocketclient, asio::placeholders::error));
+		boost::bind(&do_accept, boost::ref(accepter), config, avsocketclient, asio::placeholders::error));
 }
 
 
@@ -275,7 +279,7 @@ int main(int argc, char **argv)
 	std::string localport;
 	std::string avserveraddress; // = "avsocks.avplayer.org";//"fysj.com"
 	bool is_ipv6 = false;
-	std::string authtoken;
+	configuration config;
 
 	po::options_description desc("avsocks options");
 	desc.add_options()
@@ -286,7 +290,8 @@ int main(int argc, char **argv)
 		( "listen,l",	po::value<std::string>(&localport)->default_value("4567"),				"local listen port" )
 		( "ipv6,6",		po::value<bool>(&is_ipv6)->default_value(false),						"is ipv6" )
 		( "daemon,d",																			"go into daemon mode" )
-		( "auth",		po::value<std::string>(&authtoken),										"username:password pair" )
+		( "auth",		po::value<std::string>(&config["auth"]),										"username:password pair" )
+		( "authfile",	po::value<std::string>(&config["authfile"]),										"a file consist of username password pair" )
 	;
 
 	po::variables_map vm;
@@ -351,7 +356,7 @@ int main(int argc, char **argv)
 	{
 		socketptr avsocketclient(new asio::ip::tcp::socket(acceptor.get_io_service()));
 		acceptor.async_accept(*avsocketclient,
-			boost::bind(&do_accept, boost::ref(acceptor), avsocketclient, asio::placeholders::error));
+			boost::bind(&do_accept, boost::ref(acceptor), config, avsocketclient, asio::placeholders::error));
 	}
 
 #ifndef WIN32
