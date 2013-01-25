@@ -19,7 +19,10 @@ public:
 	// 默认构造文件.
 	gfwlist(asio::io_service & _io_service):io_service(_io_service){
 #ifndef _WIN32
-		m_cached_gfwlist = fs::path(getenv("HOME")) / ".cache" / "gfwlist.txt";
+		if(getenv("HOME"))
+			m_cached_gfwlist = fs::path(getenv("HOME")) / ".cache" / "gfwlist.txt";
+		else
+			m_cached_gfwlist = fs::path("/etc/cache/gfwlist.txt");
 #else
 		m_cached_gfwlist = fs::path(getenv("USERPROFILE")) / ".avsocks" / "gfwlist.txt";
 #endif
@@ -46,7 +49,7 @@ public:
 			do_download = true;
 		}
 		if(do_download){
-			// 下载文件.
+			// 下载文件吧，下载文件大丈夫~
 		}
 	}
 
