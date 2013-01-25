@@ -70,10 +70,10 @@ public:
 
 public:
 	// avclient构造析构函数.
-	avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr);
+	avclient(asio::io_service& _io_service, gfwlist& gfwlistfile, socketptr socket, hostaddress avserveraddr);
 
 	// 创建一个avclient对象, 并进入工作.
-	static void new_avclient(asio::io_service& _io_service,
+	static void new_avclient(asio::io_service& _io_service, gfwlist& gfwlistfile,
 		socketptr socket, hostaddress avserveraddr = avserver_address);
 
 	// 启动avclient工作.
@@ -98,6 +98,7 @@ private:
 	} m_type;
 
 	asio::io_service&	io_service;
+	gfwlist&			m_gfwlistfile;
 	hostaddress			m_avsocks_serveraddress;
 	socketptr			m_socket_client;
 	ip::tcp::socket		m_socket_server;
@@ -108,16 +109,17 @@ private:
 
 // 下面是avclient的具体实现.
 
-avclient::avclient(asio::io_service& _io_service, socketptr socket, hostaddress avserveraddr)
-	: io_service(_io_service)
-	, m_socket_client(socket)
-	, m_avsocks_serveraddress(avserveraddr)
+avclient::avclient(asio::io_service& _io_service, gfwlist& gfwlistfile, socketptr socket, hostaddress avserveraddr)
+	: io_service(_io_service),
+	m_gfwlistfile(gfwlistfile),
+	m_socket_client(socket),
+	m_avsocks_serveraddress(avserveraddr),
 #if BOOST_VERSION >= 104300
-	, m_sslctx(ssl::context::sslv23)
+	m_sslctx(ssl::context::sslv23),
 #else
-	, m_sslctx(_io_service, ssl::context::sslv23)
+	m_sslctx(_io_service, ssl::context::sslv23),
 #endif
-	, m_socket_server(_io_service)
+	m_socket_server(_io_service)
 {}
 
 void avclient::start()
@@ -241,11 +243,11 @@ void avclient::setup_ssl_cert()
 	BIO_free_all(bio);
 }
 
-void avclient::new_avclient(asio::io_service& io_service,
+void avclient::new_avclient(asio::io_service& io_service, gfwlist& gfwlistfile,
 	socketptr socket, hostaddress avserveraddr/* = avserver_address*/)
 {
 	// 先构造一个对象.
-	avclientptr p(new avclient(io_service, socket, avserveraddr));
+	avclientptr p(new avclient(io_service, gfwlistfile, socket, avserveraddr));
 	// 立刻开始工作.
 	p->start();
 }
@@ -253,19 +255,19 @@ void avclient::new_avclient(asio::io_service& io_service,
 
 // 一个简单的accept服务器, 用于不停的异步接受客户端的连接, 连接可能是socks5连接或ssl加密数据连接.
 static
-void do_accept(ip::tcp::acceptor &accepter, socketptr avsocketclient, const boost::system::error_code &ec)
+void do_accept(ip::tcp::acceptor &accepter, socketptr avsocketclient, gfwlist& gfwlistfile, const boost::system::error_code &ec)
 {
 	// socket对象
 	if(!ec)
 	{
 		// 使得这个avsocketclient构造一个avclient对象, 并start进入工作.
-		avclient::new_avclient(io_service, avsocketclient);
+		avclient::new_avclient(io_service, gfwlistfile, avsocketclient);
 	}
 
 	// 创建新的socket, 进入侦听, .
 	avsocketclient.reset(new ip::tcp::socket(accepter.get_io_service()));
 	accepter.async_accept(*avsocketclient,
-		boost::bind(&do_accept, boost::ref(accepter), avsocketclient, asio::placeholders::error));
+		boost::bind(&do_accept, boost::ref(accepter), avsocketclient, boost::ref(gfwlistfile), asio::placeholders::error));
 }
 
 
@@ -351,7 +353,7 @@ int main(int argc, char **argv)
 	{
 		socketptr avsocketclient(new asio::ip::tcp::socket(acceptor.get_io_service()));
 		acceptor.async_accept(*avsocketclient,
-			boost::bind(&do_accept, boost::ref(acceptor), avsocketclient, asio::placeholders::error));
+			boost::bind(&do_accept, boost::ref(acceptor), avsocketclient, boost::ref(gfwlistfile), asio::placeholders::error));
 	}
 
 #ifndef WIN32
