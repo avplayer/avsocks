@@ -1,0 +1,331 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>read_stream</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../index.html" title="Urdl">
+<link rel="up" href="../core.html" title="Core Classes">
+<link rel="prev" href="option_set/_option_set.html" title="option_set::~option_set">
+<link rel="next" href="read_stream/async_open.html" title="read_stream::async_open">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="option_set/_option_set.html"><img src="../../../prev.png" alt="Prev"></a><a accesskey="u" href="../core.html"><img src="../../../up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../home.png" alt="Home"></a><a accesskey="n" href="read_stream/async_open.html"><img src="../../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="urdl.reference.core.read_stream"></a><a class="link" href="read_stream.html" title="read_stream"> read_stream</a>
+</h4></div></div></div>
+<p>
+          <a class="indexterm" name="id612489"></a> 
+The class <code class="computeroutput"><span class="identifier">read_stream</span></code>
+          supports reading content from a specified URL using synchronous or asynchronous
+          operations.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">read_stream</span>
+</pre>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Member Functions</strong></span></em></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/async_open.html" title="read_stream::async_open"><span class="bold"><strong>async_open</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Asynchronously opens the specified URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/async_read_some.html" title="read_stream::async_read_some"><span class="bold"><strong>async_read_some</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Asynchronously reads some data from the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/close.html" title="read_stream::close"><span class="bold"><strong>close</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Closes the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/content_length.html" title="read_stream::content_length"><span class="bold"><strong>content_length</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the length of the content obtained from the URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/content_type.html" title="read_stream::content_type"><span class="bold"><strong>content_type</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the MIME type of the content obtained from the URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/get_io_service.html" title="read_stream::get_io_service"><span class="bold"><strong>get_io_service</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the io_service associated with the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/get_option.html" title="read_stream::get_option"><span class="bold"><strong>get_option</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the current value of an option that controls the behaviour
+                  of the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/get_options.html" title="read_stream::get_options"><span class="bold"><strong>get_options</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the values of all options set on the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/headers.html" title="read_stream::headers"><span class="bold"><strong>headers</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the protocol-specific headers obtained from the URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/is_open.html" title="read_stream::is_open"><span class="bold"><strong>is_open</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Determines whether the stream is open.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/open.html" title="read_stream::open"><span class="bold"><strong>open</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Opens the specified URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/read_some.html" title="read_stream::read_some"><span class="bold"><strong>read_some</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Reads some data from the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/read_stream.html" title="read_stream::read_stream"><span class="bold"><strong>read_stream</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Constructs an object of class read_stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/set_option.html" title="read_stream::set_option"><span class="bold"><strong>set_option</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Sets an option to control the behaviour of the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="read_stream/set_options.html" title="read_stream::set_options"><span class="bold"><strong>set_options</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Sets options to control the behaviour of the stream.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Remarks</strong></span></em></span>
+        </p>
+<p>
+          Currently supported URL protocols are <code class="computeroutput"><span class="identifier">http</span></code>,
+          <code class="computeroutput"><span class="identifier">https</span></code> and <code class="computeroutput"><span class="identifier">file</span></code>.
+        </p>
+<p>
+          The class <code class="computeroutput"><span class="identifier">read_stream</span></code> meets
+          the type requirements for <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/SyncReadStream.html" target="_top">SyncReadStream</a></code>
+          and <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/AsyncReadStream.html" target="_top">AsyncReadStream</a></code>,
+          as defined in the Boost.Asio documentation. This allows objects of class
+          <code class="computeroutput"><span class="identifier">read_stream</span></code> to be used
+          with the functions <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read.html" target="_top">boost::asio::read</a></code>,
+          <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read.html" target="_top">boost::asio::async_read</a></code>,
+          <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read_until.html" target="_top">boost::asio::read_until</a></code>
+          and <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read_until.html" target="_top">boost::asio::async_read_until</a></code>.
+        </p>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Example</strong></span></em></span>
+        </p>
+<p>
+          To synchronously open the URL, read the content and write it to standard
+          output:
+        </p>
+<pre class="programlisting"><span class="keyword">try</span>
+<span class="special">{</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">io_service</span> <span class="identifier">io_service</span><span class="special">;</span>
+  <span class="identifier">urdl</span><span class="special">::</span><span class="identifier">read_stream</span> <span class="identifier">read_stream</span><span class="special">(</span><span class="identifier">io_service</span><span class="special">);</span>
+  <span class="identifier">read_stream</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"http://www.boost.org/LICENSE_1_0.txt"</span><span class="special">);</span>
+  <span class="keyword">for</span> <span class="special">(;;)</span>
+  <span class="special">{</span>
+    <span class="keyword">char</span> <span class="identifier">data</span><span class="special">[</span><span class="number">1024</span><span class="special">];</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="identifier">ec</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">length</span> <span class="special">=</span> <span class="identifier">stream</span><span class="special">.</span><span class="identifier">read_some</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">buffer</span><span class="special">(</span><span class="identifier">data</span><span class="special">),</span> <span class="identifier">ec</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">ec</span> <span class="special">==</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">error</span><span class="special">::</span><span class="identifier">eof</span><span class="special">)</span>
+      <span class="keyword">break</span><span class="special">;</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">ec</span><span class="special">)</span>
+      <span class="keyword">throw</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">system_error</span><span class="special">(</span><span class="identifier">ec</span><span class="special">);</span>
+    <span class="identifier">os</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">data</span><span class="special">,</span> <span class="identifier">length</span><span class="special">);</span>
+  <span class="special">}</span>
+<span class="special">}</span>
+<span class="keyword">catch</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span><span class="special">&amp;</span> <span class="identifier">e</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Exception: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">what</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          To asynchronously open the URL, read the content and write it to standard
+          output:
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">io_service</span> <span class="identifier">io_service</span><span class="special">;</span>
+<span class="identifier">urdl</span><span class="special">::</span><span class="identifier">read_stream</span> <span class="identifier">read_stream</span><span class="special">(</span><span class="identifier">io_service</span><span class="special">)</span>
+<span class="keyword">char</span> <span class="identifier">data</span><span class="special">[</span><span class="number">1024</span><span class="special">];</span>
+<span class="special">...</span>
+<span class="identifier">read_stream</span><span class="special">.</span><span class="identifier">async_open</span><span class="special">(</span><span class="string">"http://www.boost.org/LICENSE_1_0.txt"</span><span class="special">,</span> <span class="identifier">open_handler</span><span class="special">);</span>
+<span class="special">...</span>
+<span class="keyword">void</span> <span class="identifier">open_handler</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span><span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">ec</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="identifier">read_stream</span><span class="special">.</span><span class="identifier">async_read_some</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">buffer</span><span class="special">(</span><span class="identifier">data</span><span class="special">),</span> <span class="identifier">read_handler</span><span class="special">);</span>
+  <span class="special">}</span>
+<span class="special">}</span>
+<span class="special">...</span>
+<span class="keyword">void</span> <span class="identifier">read_handler</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span><span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">length</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">ec</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">data</span><span class="special">,</span> <span class="identifier">length</span><span class="special">);</span>
+    <span class="identifier">read_stream</span><span class="special">.</span><span class="identifier">async_read_some</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">buffer</span><span class="special">(</span><span class="identifier">data</span><span class="special">),</span> <span class="identifier">read_handler</span><span class="special">);</span>
+  <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Requirements</strong></span></em></span>
+        </p>
+<p>
+          <span class="bold"><strong>Header:</strong></span> <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">urdl</span><span class="special">/</span><span class="identifier">read_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Namespace:</strong></span> <code class="computeroutput"><span class="identifier">urdl</span></code>
+        </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="option_set/_option_set.html"><img src="../../../prev.png" alt="Prev"></a><a accesskey="u" href="../core.html"><img src="../../../up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../home.png" alt="Home"></a><a accesskey="n" href="read_stream/async_open.html"><img src="../../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

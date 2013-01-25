@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Downloading a file using an istream</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Urdl">
+<link rel="up" href="../getting_started.html" title="Getting started">
+<link rel="prev" href="building.html" title="Building and using Urdl">
+<link rel="next" href="checking_for_errors.html" title="Checking for errors">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="building.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="checking_for_errors.html"><img src="../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="urdl.getting_started.downloading_a_file_using_an_istream"></a><a class="link" href="downloading_a_file_using_an_istream.html" title="Downloading a file using an istream">Downloading
+      a file using an istream</a>
+</h3></div></div></div>
+<p>
+        The simplest use of Urdl is to download a file or other resource using the
+        <a class="link" href="../reference/core/istream.html" title="istream">urdl::istream</a> class.
+      </p>
+<pre class="programlisting"><span class="comment">// For std::cout and std::cerr.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">ostream</span><span class="special">&gt;</span>
+
+<span class="comment">// For urdl::istream. Each of Urdl's core classes has its own header file.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">urdl</span><span class="special">/</span><span class="identifier">istream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="comment">// Open the URL. The connection is established and the HTTP request is sent.
+</span>  <span class="identifier">urdl</span><span class="special">::</span><span class="identifier">istream</span> <span class="identifier">is</span><span class="special">(</span><span class="string">"http://www.boost.org/LICENSE_1_0.txt"</span><span class="special">);</span>
+
+  <span class="comment">// Check whether we opened the URL successfully.
+</span>  <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">is</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Unable to open URL"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+  <span class="special">}</span>
+
+  <span class="comment">// From here on, we can use urdl::istream like any other std::istream
+</span>  <span class="comment">// object. Let's output the downloaded content one line at a time.
+</span>  <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">line</span><span class="special">;</span>
+  <span class="keyword">while</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">getline</span><span class="special">(</span><span class="identifier">is</span><span class="special">,</span> <span class="identifier">line</span><span class="special">))</span>
+  <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">line</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="building.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="checking_for_errors.html"><img src="../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

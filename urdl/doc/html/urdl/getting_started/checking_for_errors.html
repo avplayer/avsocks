@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Checking for errors</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Urdl">
+<link rel="up" href="../getting_started.html" title="Getting started">
+<link rel="prev" href="downloading_a_file_using_an_istream.html" title="Downloading a file using an istream">
+<link rel="next" href="setting_options_to_perform_an_http_post.html" title="Setting options to perform an HTTP POST">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="downloading_a_file_using_an_istream.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="setting_options_to_perform_an_http_post.html"><img src="../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="urdl.getting_started.checking_for_errors"></a><a class="link" href="checking_for_errors.html" title="Checking for errors">Checking for
+      errors</a>
+</h3></div></div></div>
+<p>
+        If we are unable to open a URL for any reason, we can find out the last error
+        from the <a class="link" href="../reference/core/istream.html" title="istream">urdl::istream</a>
+        class:
+      </p>
+<pre class="programlisting"><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">istream</span> <span class="identifier">is</span><span class="special">(</span><span class="string">"http://somehost/path"</span><span class="special">);</span>
+<span class="keyword">if</span> <span class="special">(!</span><span class="identifier">is</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Unable to open URL: "</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="identifier">is</span><span class="special">.</span><span class="identifier">error</span><span class="special">().</span><span class="identifier">message</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Alternatively, we may test for a specific error:
+      </p>
+<pre class="programlisting"><span class="comment">// For the HTTP error codes.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">urdl</span><span class="special">/</span><span class="identifier">http</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="special">...</span>
+
+<span class="identifier">urdl</span><span class="special">::</span><span class="identifier">istream</span> <span class="identifier">is</span><span class="special">(</span><span class="string">"http://somehost/path"</span><span class="special">);</span>
+<span class="keyword">if</span> <span class="special">(!</span><span class="identifier">is</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">is</span><span class="special">.</span><span class="identifier">error</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">urdl</span><span class="special">::</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">errc</span><span class="special">::</span><span class="identifier">not_found</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="comment">// Hmm, maybe we can try downloading the file from somewhere else...
+</span>  <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="downloading_a_file_using_an_istream.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="setting_options_to_perform_an_http_post.html"><img src="../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

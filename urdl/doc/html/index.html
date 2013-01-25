@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Urdl</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Urdl">
+<link rel="next" href="urdl/rationale.html" title="Rationale">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="urdl/rationale.html"><img src="next.png" alt="Next"></a></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="urdl"></a>Urdl</h2></div>
+<div><p class="copyright">Copyright © 2009 Christopher M. Kohlhoff</p></div>
+<div><div class="legalnotice">
+<a name="id578269"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="urdl/rationale.html"> Rationale</a></span></dt>
+<dt><span class="section"><a href="urdl/features.html"> Features</a></span></dt>
+<dt><span class="section"><a href="urdl/planned_features.html"> Planned features</a></span></dt>
+<dt><span class="section"><a href="urdl/prerequisites.html"> Prerequisites</a></span></dt>
+<dt><span class="section"><a href="urdl/platforms.html"> Supported platforms</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started.html"> Getting started</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="urdl/getting_started/building.html"> Building and using Urdl</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started/downloading_a_file_using_an_istream.html">Downloading
+      a file using an istream</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started/checking_for_errors.html">Checking for
+      errors</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started/setting_options_to_perform_an_http_post.html">Setting
+      options to perform an HTTP POST</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started/grouping_and_reusing_options.html">Grouping
+      and reusing options</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started/specifying_timeouts.html">Specifying
+      timeouts</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started/parsing_urls.html">Parsing URLs</a></span></dt>
+<dt><span class="section"><a href="urdl/getting_started/integrating_with_boost_asio.html">Integrating
+      with Boost.Asio</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="urdl/reference.html"> Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="urdl/reference/core.html"> Core Classes</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="urdl/reference/core/istream.html"> istream</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/core/istreambuf.html"> istreambuf</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/core/option_set.html"> option_set</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/core/read_stream.html"> read_stream</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/core/url.html"> url</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="urdl/reference/opt.html"> Options</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="urdl/reference/opt/http__max_redirects.html"> http::max_redirects</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/opt/http__request_content.html"> http::request_content</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/opt/http__request_content_type.html"> http::request_content_type</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/opt/http__request_method.html"> http::request_method</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/opt/http__user_agent.html"> http::user_agent</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="urdl/reference/err.html"> Error Handling</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="urdl/reference/err/http__errc__errc_t.html"> http::errc::errc_t</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/err/http__errc__make_error_code.html"> http::errc::make_error_code</a></span></dt>
+<dt><span class="section"><a href="urdl/reference/err/http__error_category.html"> http::error_category</a></span></dt>
+</dl></dd>
+</dl></dd>
+<dt><span class="section"><a href="urdl/index.html">Index</a></span></dt>
+</dl></div>
+<a name="urdl..what_is_urdl_"></a><h3>
+<a name="id590449"></a>
+    <a class="link" href="index.html#urdl..what_is_urdl_">What is Urdl?</a>
+  </h3>
+<p>
+    Urdl is a cross-platform C++ library for downloading web content using a URL.
+    It provides an easy-to-use extension to standard C++ iostreams and an asynchronous
+    interface for use with Boost.Asio.
+  </p>
+<a name="urdl..what_can_urdl_be_used_for_"></a><h3>
+<a name="id590471"></a>
+    <a class="link" href="index.html#urdl..what_can_urdl_be_used_for_">What can Urdl be used for?</a>
+  </h3>
+<p>
+    Possible uses for Urdl include:
+  </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+      Downloading application configuration or data files.
+    </li>
+<li>
+      Downloading software updates.
+    </li>
+<li>
+      Accessing RSS feeds.
+    </li>
+<li>
+      Web service clients (e.g. SOAP, XML-RPC or REST).
+    </li>
+<li>
+      Web scraping.
+    </li>
+</ul></div>
+<a name="urdl..obtaining_urdl"></a><h3>
+<a name="id559499"></a>
+    <a class="link" href="index.html#urdl..obtaining_urdl">Obtaining Urdl</a>
+  </h3>
+<p>
+    The latest release of Urdl can be downloaded from <a href="http://sourceforge.net/project/showfiles.php?group_id=262090" target="_top">SourceForge.net</a>.
+  </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: June 03, 2009 at 11:46:36 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="urdl/rationale.html"><img src="next.png" alt="Next"></a></div>
+</body>
+</html>

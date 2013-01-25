@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>istream::set_options</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../../index.html" title="Urdl">
+<link rel="up" href="../istream.html" title="istream">
+<link rel="prev" href="set_option.html" title="istream::set_option">
+<link rel="next" href="../istreambuf.html" title="istreambuf">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="set_option.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../istream.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="../istreambuf.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="urdl.reference.core.istream.set_options"></a><a class="link" href="set_options.html" title="istream::set_options"> istream::set_options</a>
+</h5></div></div></div>
+<p>
+            <a class="indexterm" name="id607732"></a> 
+Sets options to control the behaviour of the stream.
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">set_options</span><span class="special">(</span>
+    <span class="keyword">const</span> <span class="identifier">option_set</span> <span class="special">&amp;</span> <span class="identifier">options</span><span class="special">);</span>
+</pre>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Parameters</strong></span></em></span>
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">options</span></dt>
+<dd><p>
+                The options to be set on the stream. The options in the set are added
+                on top of any options already set on the stream.
+              </p></dd>
+</dl>
+</div>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Remarks</strong></span></em></span>
+          </p>
+<p>
+            Performs <code class="computeroutput"><span class="identifier">rdbuf</span><span class="special">()-&gt;</span><span class="identifier">set_options</span><span class="special">(</span><span class="identifier">options</span><span class="special">)</span></code>.
+          </p>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Example</strong></span></em></span>
+          </p>
+<pre class="programlisting"><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">istream</span> <span class="identifier">is</span><span class="special">;</span>
+<span class="identifier">urdl</span><span class="special">::</span><span class="identifier">option_set</span> <span class="identifier">options</span><span class="special">;</span>
+<span class="identifier">options</span><span class="special">.</span><span class="identifier">set_option</span><span class="special">(</span><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">max_redirects</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+<span class="identifier">options</span><span class="special">.</span><span class="identifier">set_option</span><span class="special">(</span><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">ssl</span><span class="special">::</span><span class="identifier">verify_peer</span><span class="special">(</span><span class="keyword">false</span><span class="special">));</span>
+<span class="identifier">stream</span><span class="special">.</span><span class="identifier">set_options</span><span class="special">(</span><span class="identifier">options</span><span class="special">);</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="set_option.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../istream.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="../istreambuf.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

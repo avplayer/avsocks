@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Setting options to perform an HTTP POST</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Urdl">
+<link rel="up" href="../getting_started.html" title="Getting started">
+<link rel="prev" href="checking_for_errors.html" title="Checking for errors">
+<link rel="next" href="grouping_and_reusing_options.html" title="Grouping and reusing options">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="checking_for_errors.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="grouping_and_reusing_options.html"><img src="../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="urdl.getting_started.setting_options_to_perform_an_http_post"></a><a class="link" href="setting_options_to_perform_an_http_post.html" title="Setting options to perform an HTTP POST">Setting
+      options to perform an HTTP POST</a>
+</h3></div></div></div>
+<p>
+        To upload over HTTP, we set the <a class="link" href="../reference/opt/http__request_method.html" title="http::request_method">http::request_method</a>,
+        <a class="link" href="../reference/opt/http__request_content.html" title="http::request_content">http::request_content</a>
+        and <a class="link" href="../reference/opt/http__request_content_type.html" title="http::request_content_type">http::request_content_type</a>
+        options on the stream prior to opening the URL:
+      </p>
+<pre class="programlisting"><span class="comment">// For the HTTP options.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">urdl</span><span class="special">/</span><span class="identifier">http</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="special">...</span>
+
+<span class="identifier">urdl</span><span class="special">::</span><span class="identifier">istream</span> <span class="identifier">is</span><span class="special">;</span>
+
+<span class="comment">// We're doing an HTTP POST ...
+</span><span class="identifier">is</span><span class="special">.</span><span class="identifier">set_option</span><span class="special">(</span><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">request_method</span><span class="special">(</span><span class="string">"POST"</span><span class="special">));</span>
+
+<span class="comment">// ... where the MIME type indicates plain text ...
+</span><span class="identifier">is</span><span class="special">.</span><span class="identifier">set_option</span><span class="special">(</span><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">request_content_type</span><span class="special">(</span><span class="string">"text/plain"</span><span class="special">));</span>
+
+<span class="comment">// ... and here's the content.
+</span><span class="identifier">is</span><span class="special">.</span><span class="identifier">set_option</span><span class="special">(</span><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">request_content</span><span class="special">(</span><span class="string">"Hello, world!"</span><span class="special">));</span>
+
+<span class="comment">// All options set, so now we can open the URL.
+</span><span class="identifier">is</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"http://somehost/path"</span><span class="special">);</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="checking_for_errors.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="grouping_and_reusing_options.html"><img src="../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

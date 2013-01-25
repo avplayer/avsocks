@@ -1,0 +1,168 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Building and using Urdl</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Urdl">
+<link rel="up" href="../getting_started.html" title="Getting started">
+<link rel="prev" href="../getting_started.html" title="Getting started">
+<link rel="next" href="downloading_a_file_using_an_istream.html" title="Downloading a file using an istream">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../getting_started.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="downloading_a_file_using_an_istream.html"><img src="../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="urdl.getting_started.building"></a><a class="link" href="building.html" title="Building and using Urdl"> Building and using Urdl</a>
+</h3></div></div></div>
+<p>
+        There are three options for using Urdl in an application:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          as a separately compiled library;
+        </li>
+<li>
+          by compiling the source directly into the application; or
+        </li>
+<li>
+          as a header-file-only library.
+        </li>
+</ul></div>
+<a name="urdl.getting_started.building.using_urdl_as_a_separately_compiled_library"></a><h5>
+<a name="id599646"></a>
+        <a class="link" href="building.html#urdl.getting_started.building.using_urdl_as_a_separately_compiled_library">Using
+        Urdl as a separately compiled library</a>
+      </h5>
+<p>
+        Urdl uses <code class="literal">bjam</code> and Boost.Build to build shared and static
+        libraries. To build the libraries, perform the following steps:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          Set a <code class="literal">BOOST_ROOT</code> environment variable pointing to the
+          location of Boost.
+        </li>
+<li>
+          If building on Windows, set an <code class="literal">OPENSSL_ROOT</code> environment
+          variable pointing to the location of OpenSSL. When building on UNIX, the
+          build scripts assume that the OpenSSL headers and libraries may be found
+          in the system's include and library paths, respectively. To disable Urdl's
+          SSL support, define <code class="literal">URDL_DISABLE_SSL=1</code> as an environment
+          variable.
+        </li>
+<li>
+          Run <code class="literal">bjam</code> in the top-level directory of the Urdl distribution.
+          Libraries should be built into the <code class="literal">lib</code> subdirectory.
+        </li>
+</ol></div>
+<p>
+        Then, to use Urdl in an application:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          Add the <code class="literal">include</code> subdirectory to your compiler's include
+          path.
+        </li>
+<li>
+          Add the <code class="literal">lib</code> subdirectory to your linker's library path.
+        </li>
+<li>
+          Add the Boost directory to your compiler's include path.
+        </li>
+<li>
+          Add the Boost library directory (e.g. <code class="literal">stage/lib</code>) to
+          your linker's library path. Urdl needs the application to link against
+          the Boost.System and Boost.Date_Time libraries.
+        </li>
+<li>
+          If disabling Urdl's SSL support, add <code class="literal">URDL_DISABLE_SSL=1</code>
+          to your compiler's preprocessor definitions.
+        </li>
+<li>
+          If using the DLL version of Urdl on Windows, add <code class="literal">URDL_DYN_LINK=1</code>
+          to your compiler's preprocessor definitions.
+        </li>
+</ol></div>
+<a name="urdl.getting_started.building.compiling_urdl_directly_into_an_application"></a><h5>
+<a name="id599779"></a>
+        <a class="link" href="building.html#urdl.getting_started.building.compiling_urdl_directly_into_an_application">Compiling
+        Urdl directly into an application</a>
+      </h5>
+<p>
+        To compile Urdl directly into an application, perform the following steps:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          Add the <code class="literal">include</code> subdirectory to your compiler's include
+          path.
+        </li>
+<li>
+          Add the file <code class="literal">src/urdl.cpp</code> to your project or makefile.
+        </li>
+<li>
+          Add the Boost directory to your compiler's include path.
+        </li>
+<li>
+          Add the Boost library directory (e.g. <code class="literal">stage/lib</code>) to
+          your linker's library path. Urdl needs the application to link against
+          the Boost.System and Boost.Date_Time libraries.
+        </li>
+<li>
+          If disabling Urdl's SSL support, add <code class="literal">URDL_DISABLE_SSL=1</code>
+          to your compiler's preprocessor definitions.
+        </li>
+<li>
+          If building on Windows, add <code class="literal">URDL_NO_LIB=1</code> to your compiler's
+          preprocessor definitions to disable autolinking.
+        </li>
+</ol></div>
+<a name="urdl.getting_started.building.using_urdl_as_a_header_only_library"></a><h5>
+<a name="id599857"></a>
+        <a class="link" href="building.html#urdl.getting_started.building.using_urdl_as_a_header_only_library">Using
+        Urdl as a header-only library</a>
+      </h5>
+<p>
+        To use Urdl as a header-only library, perform the following steps:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          Add the <code class="literal">include</code> subdirectory to your compiler's include
+          path.
+        </li>
+<li>
+          Add the Boost directory to your compiler's include path.
+        </li>
+<li>
+          Add the Boost library directory (e.g. <code class="literal">stage/lib</code>) to
+          your linker's library path. Urdl needs the application to link against
+          the Boost.System library and possibly the Boost.Date_Time library.
+        </li>
+<li>
+          If disabling Urdl's SSL support, add <code class="literal">URDL_DISABLE_SSL=1</code>
+          to your compiler's preprocessor definitions.
+        </li>
+<li>
+          Add <code class="literal">URDL_HEADER_ONLY=1</code> to your compiler's preprocessor
+          definitions.
+        </li>
+</ol></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../getting_started.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="downloading_a_file_using_an_istream.html"><img src="../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

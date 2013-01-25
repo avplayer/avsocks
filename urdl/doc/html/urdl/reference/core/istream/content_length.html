@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>istream::content_length</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../../index.html" title="Urdl">
+<link rel="up" href="../istream.html" title="istream">
+<link rel="prev" href="close.html" title="istream::close">
+<link rel="next" href="content_type.html" title="istream::content_type">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="close.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../istream.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="content_type.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="urdl.reference.core.istream.content_length"></a><a class="link" href="content_length.html" title="istream::content_length"> istream::content_length</a>
+</h5></div></div></div>
+<p>
+            <a class="indexterm" name="id604186"></a> 
+Gets the length of the content obtained from the
+            URL.
+          </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">content_length</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Return Value</strong></span></em></span>
+          </p>
+<p>
+            The length, in bytes, of the content. If the content associated with
+            the URL does not specify a length, <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">max</span><span class="special">()</span></code>.
+          </p>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Remarks</strong></span></em></span>
+          </p>
+<p>
+            Returns <code class="computeroutput"><span class="identifier">rdbuf</span><span class="special">()-&gt;</span><span class="identifier">content_length</span><span class="special">()</span></code>.
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="close.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../istream.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="content_type.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Integrating with Boost.Asio</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Urdl">
+<link rel="up" href="../getting_started.html" title="Getting started">
+<link rel="prev" href="parsing_urls.html" title="Parsing URLs">
+<link rel="next" href="../reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parsing_urls.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="urdl.getting_started.integrating_with_boost_asio"></a><a class="link" href="integrating_with_boost_asio.html" title="Integrating with Boost.Asio">Integrating
+      with Boost.Asio</a>
+</h3></div></div></div>
+<p>
+        The <a class="link" href="../reference/core/read_stream.html" title="read_stream">urdl::read_stream</a>
+        class allows applications to use Urdl's functionality in conjunction with
+        Boost.Asio.
+      </p>
+<p>
+        To synchronously open a URL, we may use:
+      </p>
+<pre class="programlisting"><span class="comment">// For urdl::read_stream.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">urdl</span><span class="special">/</span><span class="identifier">read_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="special">...</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">io_service</span> <span class="identifier">io_service</span><span class="special">;</span>
+
+<span class="special">...</span>
+
+<span class="comment">// An urdl::read_stream must always have an associated io_service.
+</span><span class="identifier">urdl</span><span class="special">::</span><span class="identifier">read_stream</span> <span class="identifier">stream</span><span class="special">(</span><span class="identifier">io_service</span><span class="special">);</span>
+
+<span class="comment">// Open the URL synchronously. Throws boost::system::system_error on failure.
+</span><span class="identifier">stream</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"http://somehost/path"</span><span class="special">);</span>
+
+<span class="special">...</span>
+
+<span class="comment">// Alternatively, open the URL synchronously without throwing on error.
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="identifier">ec</span><span class="special">;</span>
+<span class="identifier">stream</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"http://somehost/path"</span><span class="special">,</span> <span class="identifier">ec</span><span class="special">);</span>
+</pre>
+<p>
+        To asynchronously open a URL, we can write:
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">open_handler</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span><span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">ec</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="comment">// URL successfully opened.
+</span>    <span class="special">...</span>
+  <span class="special">}</span>
+  <span class="keyword">else</span>
+  <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Unable to open URL: "</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="identifier">is</span><span class="special">.</span><span class="identifier">error</span><span class="special">().</span><span class="identifier">message</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="special">...</span>
+
+<span class="identifier">stream</span><span class="special">.</span><span class="identifier">async_open</span><span class="special">(</span><span class="string">"http://somehost/path"</span><span class="special">,</span> <span class="identifier">open_handler</span><span class="special">);</span>
+</pre>
+<p>
+        and the callback function <code class="computeroutput"><span class="identifier">open_handler</span></code>
+        will be invoked once the asynchronous operation completes.
+      </p>
+<p>
+        The <a class="link" href="../reference/core/read_stream.html" title="read_stream">urdl::read_stream</a>
+        class meets Boost.Asio's <a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/SyncReadStream.html" target="_top">SyncReadStream</a>
+        and <a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/AsyncReadStream.html" target="_top">AsyncReadStream</a>
+        type requirements. This means we can use it with the synchronous functions
+        <a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read.html" target="_top">boost::asio::read</a>
+        and <a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read_until.html" target="_top">boost::asio::read_until</a>:
+      </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="number">512</span><span class="special">&gt;</span> <span class="identifier">data</span><span class="special">;</span>
+<a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read.html" target="_top">boost::asio::read</a><span class="special">(</span><span class="identifier">stream</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">buffer</span><span class="special">(</span><span class="identifier">data</span><span class="special">));</span>
+
+<span class="special">...</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">streambuf</span> <span class="identifier">buffer</span><span class="special">;</span>
+<a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read_until.html" target="_top">boost::asio::read_until</a><span class="special">(</span><span class="identifier">stream</span><span class="special">,</span> <span class="identifier">buffer</span><span class="special">,</span> <span class="string">"\r\n"</span><span class="special">);</span>
+</pre>
+<p>
+        or with the asynchronous functions <a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read.html" target="_top">boost::asio::async_read</a>
+        and <a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read_until.html" target="_top">boost::asio::async_read_until</a>:
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">read_handler</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span><span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">length</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="special">...</span>
+<span class="special">}</span>
+
+<span class="special">...</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="number">512</span><span class="special">&gt;</span> <span class="identifier">data</span><span class="special">;</span>
+<a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read.html" target="_top">boost::asio::async_read</a><span class="special">(</span><span class="identifier">stream</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">buffer</span><span class="special">(</span><span class="identifier">data</span><span class="special">),</span> <span class="identifier">read_handler</span><span class="special">);</span>
+
+<span class="special">...</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">asio</span><span class="special">::</span><span class="identifier">streambuf</span> <span class="identifier">buffer</span><span class="special">;</span>
+<a href="http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read_until.html" target="_top">boost::asio::async_read_until</a><span class="special">(</span><span class="identifier">stream</span><span class="special">,</span> <span class="identifier">buffer</span><span class="special">,</span> <span class="string">"\r\n"</span><span class="special">,</span> <span class="identifier">read_handler</span><span class="special">);</span>
+</pre>
+<p>
+        The asynchronous functions on the <a class="link" href="../reference/core/read_stream.html" title="read_stream">urdl::read_stream</a>
+        class allow concurrent access to multiple URLs without requiring additional
+        threads. Furthermore, we can perform the operations concurrently with any
+        of the other asynchronous facilities provided by Boost.Asio (sockets, timers
+        and so on).
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parsing_urls.html"><img src="../../prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

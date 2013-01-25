@@ -1,0 +1,58 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>read_stream::content_type</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../../index.html" title="Urdl">
+<link rel="up" href="../read_stream.html" title="read_stream">
+<link rel="prev" href="content_length.html" title="read_stream::content_length">
+<link rel="next" href="get_io_service.html" title="read_stream::get_io_service">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="content_length.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../read_stream.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="get_io_service.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="urdl.reference.core.read_stream.content_type"></a><a class="link" href="content_type.html" title="read_stream::content_type"> read_stream::content_type</a>
+</h5></div></div></div>
+<p>
+            <a class="indexterm" name="id616027"></a> 
+Gets the MIME type of the content obtained from
+            the URL.
+          </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">content_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Return Value</strong></span></em></span>
+          </p>
+<p>
+            A string specifying the MIME type. Examples of possible return values
+            include <code class="computeroutput"><span class="identifier">text</span><span class="special">/</span><span class="identifier">plain</span></code>, <code class="computeroutput"><span class="identifier">text</span><span class="special">/</span><span class="identifier">html</span></code>
+            and <code class="computeroutput"><span class="identifier">image</span><span class="special">/</span><span class="identifier">png</span></code>.
+          </p>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Remarks</strong></span></em></span>
+          </p>
+<p>
+            Not all URL protocols support a content type. For these protocols, this
+            function returns an empty string.
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="content_length.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../read_stream.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="get_io_service.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

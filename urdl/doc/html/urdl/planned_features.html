@@ -1,0 +1,118 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Planned features</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Urdl">
+<link rel="up" href="../index.html" title="Urdl">
+<link rel="prev" href="features.html" title="Features">
+<link rel="next" href="prerequisites.html" title="Prerequisites">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="features.html"><img src="../prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../home.png" alt="Home"></a><a accesskey="n" href="prerequisites.html"><img src="../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="urdl.planned_features"></a><a class="link" href="planned_features.html" title="Planned features"> Planned features</a>
+</h2></div></div></div>
+<p>
+      The following features are planned for a future release of Urdl:
+    </p>
+<div class="itemizedlist"><ul type="disc"><li><span class="bold"><strong>Support for HTTP chunking.</strong></span></li></ul></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          Add the ability to handle HTTP responses where the <code class="literal">Transfer-Encoding</code>
+          is <code class="literal">chunked</code>.
+        </p>
+<p>
+      </p>
+</blockquote></div>
+<div class="itemizedlist"><ul type="disc"><li><span class="bold"><strong>Support for HTTP proxies.</strong></span></li></ul></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          Add support for making HTTP and HTTPS requests through a proxy.
+        </p>
+<p>
+      </p>
+</blockquote></div>
+<div class="itemizedlist"><ul type="disc"><li><span class="bold"><strong>Support for FTP.</strong></span></li></ul></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          Add support for downloading files using FTP.
+        </p>
+<p>
+      </p>
+</blockquote></div>
+<div class="itemizedlist"><ul type="disc"><li><span class="bold"><strong>SSL options to control peer verification.</strong></span></li></ul></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          Add new options for controlling the way Urdl uses SSL to implement HTTPS,
+          e.g. the ability to specify a certificate authority file or directory,
+          whether peers are verified, etc. The current implementation always verifies
+          the peer using OpenSSL's default certificate chains.
+        </p>
+<p>
+      </p>
+</blockquote></div>
+<div class="itemizedlist"><ul type="disc"><li><span class="bold"><strong>Support for wildcard SSL certificates.</strong></span></li></ul></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          The current implementation of SSL peer verification supports only certificates
+          issued to a single hostname.
+        </p>
+<p>
+      </p>
+</blockquote></div>
+<div class="itemizedlist"><ul type="disc"><li><span class="bold"><strong>Status function callback.</strong></span></li></ul></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          Allow the user to register a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;&gt;</span></code> object using <code class="computeroutput"><span class="identifier">set_option</span><span class="special">()</span></code>. This will be called by the implementation
+          to provide progress updates (e.g. resolving, connection, reading, etc).
+        </p>
+<p>
+      </p>
+</blockquote></div>
+<div class="itemizedlist"><ul type="disc"><li><span class="bold"><strong>Runtime polymorphism and user-supplied backends.</strong></span></li></ul></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          Change the underlying implementation to use runtime polymorphism (abstract
+          base classes) to invoke the appropriate protocol implementation. The user
+          will be able to register a factory object to provide custom support for
+          additional protocols.
+        </p>
+<p>
+      </p>
+</blockquote></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="features.html"><img src="../prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../home.png" alt="Home"></a><a accesskey="n" href="prerequisites.html"><img src="../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

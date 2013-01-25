@@ -1,0 +1,310 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>istreambuf</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../index.html" title="Urdl">
+<link rel="up" href="../core.html" title="Core Classes">
+<link rel="prev" href="istream/set_options.html" title="istream::set_options">
+<link rel="next" href="istreambuf/close.html" title="istreambuf::close">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="istream/set_options.html"><img src="../../../prev.png" alt="Prev"></a><a accesskey="u" href="../core.html"><img src="../../../up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../home.png" alt="Home"></a><a accesskey="n" href="istreambuf/close.html"><img src="../../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="urdl.reference.core.istreambuf"></a><a class="link" href="istreambuf.html" title="istreambuf"> istreambuf</a>
+</h4></div></div></div>
+<p>
+          <a class="indexterm" name="id608056"></a> 
+The class <code class="computeroutput"><span class="identifier">istreambuf</span></code>
+          associates the input sequence with the content from a specified URL.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">istreambuf</span> <span class="special">:</span>
+  <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">streambuf</span>
+</pre>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Member Functions</strong></span></em></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/close.html" title="istreambuf::close"><span class="bold"><strong>close</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Closes the stream buffer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/content_length.html" title="istreambuf::content_length"><span class="bold"><strong>content_length</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the length of the content obtained from the URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/content_type.html" title="istreambuf::content_type"><span class="bold"><strong>content_type</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the MIME type of the content obtained from the URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/get_option.html" title="istreambuf::get_option"><span class="bold"><strong>get_option</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the current value of an option that controls the behaviour
+                  of the stream buffer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/get_options.html" title="istreambuf::get_options"><span class="bold"><strong>get_options</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the values of all options set on the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/headers.html" title="istreambuf::headers"><span class="bold"><strong>headers</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the protocol-specific headers obtained from the URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/is_open.html" title="istreambuf::is_open"><span class="bold"><strong>is_open</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Determines whether the stream buffer is open.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/istreambuf.html" title="istreambuf::istreambuf"><span class="bold"><strong>istreambuf</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Constructs an object of class istreambuf.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/open.html" title="istreambuf::open"><span class="bold"><strong>open</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Opens the specified URL.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/open_timeout.html" title="istreambuf::open_timeout"><span class="bold"><strong>open_timeout</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the open timeout of the stream buffer.
+                </p>
+                <p>
+                  Sets the open timeout of the stream buffer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/puberror.html" title="istreambuf::puberror"><span class="bold"><strong>puberror</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the last error associated with the stream buffer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/read_timeout.html" title="istreambuf::read_timeout"><span class="bold"><strong>read_timeout</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the read timeout of the stream buffer.
+                </p>
+                <p>
+                  Sets the read timeout of the stream buffer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/set_option.html" title="istreambuf::set_option"><span class="bold"><strong>set_option</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Sets an option to control the behaviour of the stream buffer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/set_options.html" title="istreambuf::set_options"><span class="bold"><strong>set_options</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Sets options to control the behaviour of the stream buffer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/_istreambuf.html" title="istreambuf::~istreambuf"><span class="bold"><strong>~istreambuf</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Destroys an object of class istreambuf.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Protected Member Functions</strong></span></em></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/error.html" title="istreambuf::error"><span class="bold"><strong>error</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets the last error associated with the stream.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="istreambuf/underflow.html" title="istreambuf::underflow"><span class="bold"><strong>underflow</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Overrides std::streambuf behaviour.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Requirements</strong></span></em></span>
+        </p>
+<p>
+          <span class="bold"><strong>Header:</strong></span> <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">urdl</span><span class="special">/</span><span class="identifier">istreambuf</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Namespace:</strong></span> <code class="computeroutput"><span class="identifier">urdl</span></code>
+        </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="istream/set_options.html"><img src="../../../prev.png" alt="Prev"></a><a accesskey="u" href="../core.html"><img src="../../../up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../home.png" alt="Home"></a><a accesskey="n" href="istreambuf/close.html"><img src="../../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

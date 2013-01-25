@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>url::port</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../../index.html" title="Urdl">
+<link rel="up" href="../url.html" title="url">
+<link rel="prev" href="path.html" title="url::path">
+<link rel="next" href="protocol.html" title="url::protocol">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="path.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../url.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="protocol.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="urdl.reference.core.url.port"></a><a class="link" href="port.html" title="url::port"> url::port</a>
+</h5></div></div></div>
+<p>
+            <a class="indexterm" name="id623186"></a> 
+Gets the port component of the URL.
+          </p>
+<pre class="programlisting"><span class="keyword">unsigned</span> <span class="keyword">short</span> <span class="identifier">port</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Return Value</strong></span></em></span>
+          </p>
+<p>
+            The port number of the URL.
+          </p>
+<p>
+            <span class="emphasis"><em><span class="bold"><strong>Remarks</strong></span></em></span>
+          </p>
+<p>
+            If the URL string did not specify a port, and the protocol is one of
+            <code class="computeroutput"><span class="identifier">http</span></code>, <code class="computeroutput"><span class="identifier">https</span></code>
+            or <code class="computeroutput"><span class="identifier">ftp</span></code>, an appropriate
+            default port number is returned.
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="path.html"><img src="../../../../prev.png" alt="Prev"></a><a accesskey="u" href="../url.html"><img src="../../../../up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../home.png" alt="Home"></a><a accesskey="n" href="protocol.html"><img src="../../../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>

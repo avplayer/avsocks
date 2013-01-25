@@ -1,0 +1,170 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>option_set</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../../index.html" title="Urdl">
+<link rel="up" href="../core.html" title="Core Classes">
+<link rel="prev" href="istreambuf/_istreambuf.html" title="istreambuf::~istreambuf">
+<link rel="next" href="option_set/clear_option.html" title="option_set::clear_option">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Urdl C++ Library" width="160" height="60" src="../../../urdl.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="istreambuf/_istreambuf.html"><img src="../../../prev.png" alt="Prev"></a><a accesskey="u" href="../core.html"><img src="../../../up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../home.png" alt="Home"></a><a accesskey="n" href="option_set/clear_option.html"><img src="../../../next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="urdl.reference.core.option_set"></a><a class="link" href="option_set.html" title="option_set"> option_set</a>
+</h4></div></div></div>
+<p>
+          <a class="indexterm" name="id611156"></a> 
+The class <code class="computeroutput"><span class="identifier">option_set</span></code>
+          maintains a collection of options.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">option_set</span>
+</pre>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Member Functions</strong></span></em></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="option_set/clear_option.html" title="option_set::clear_option"><span class="bold"><strong>clear_option</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Removes an option from the set.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="option_set/get_option.html" title="option_set::get_option"><span class="bold"><strong>get_option</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Gets an option from the set.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="option_set/operator_eq_.html" title="option_set::operator="><span class="bold"><strong>operator=</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Assignment operator.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="option_set/option_set.html" title="option_set::option_set"><span class="bold"><strong>option_set</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Constructs an object of class option_set.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="option_set/set_option.html" title="option_set::set_option"><span class="bold"><strong>set_option</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Sets the value of an option in the set.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="option_set/set_options.html" title="option_set::set_options"><span class="bold"><strong>set_options</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Sets multiple options in a set from another set.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="option_set/_option_set.html" title="option_set::~option_set"><span class="bold"><strong>~option_set</strong></span></a>
+                </p>
+                </td>
+<td>
+                <p>
+                  Destroys an object of class option_set.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Remarks</strong></span></em></span>
+        </p>
+<p>
+          Options are uniquely identified by type, so the <code class="computeroutput"><span class="identifier">option_set</span></code>
+          class is a collection of objects of differing types, indexed by type.
+        </p>
+<p>
+          The option types stored in the set must meet the type requirements for
+          CopyConstructible.
+        </p>
+<p>
+          <span class="emphasis"><em><span class="bold"><strong>Requirements</strong></span></em></span>
+        </p>
+<p>
+          <span class="bold"><strong>Header:</strong></span> <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">urdl</span><span class="special">/</span><span class="identifier">option_set</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Namespace:</strong></span> <code class="computeroutput"><span class="identifier">urdl</span></code>
+        </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christopher M. Kohlhoff<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="istreambuf/_istreambuf.html"><img src="../../../prev.png" alt="Prev"></a><a accesskey="u" href="../core.html"><img src="../../../up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../home.png" alt="Home"></a><a accesskey="n" href="option_set/clear_option.html"><img src="../../../next.png" alt="Next"></a>
+</div>
+</body>
+</html>
