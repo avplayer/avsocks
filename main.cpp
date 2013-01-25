@@ -289,18 +289,19 @@ int main(int argc, char **argv)
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
     
-    // 读取配置文件, 优先级为: 临时配置 > 用户配置 > 系统配置.
-    std::vector<fs::path> config_files;
-    config_files.push_back("/etc/avsocks.conf"); // 系统配置文件.
-    if( getenv("HOME"))
-        config_files.push_back(fs::path( getenv("HOME") ) / ".avsocks.conf"); // 用户配置文件.
-    config_files.push_back("./avsocks.conf"); // 临时配置文件.
-    BOOST_FOREACH(fs::path config_file, config_files)
-    {
-        if (fs::exists(config_file)) {
-            po::store(po::parse_config_file<char>(config_file.c_str(), desc), vm);
-        }
-    }
+	// 读取配置文件, 优先级为: 临时配置 > 用户配置 > 系统配置.
+	std::vector<fs::path> config_files;
+	config_files.push_back ( "/etc/avsocks.conf" ); // 系统配置文件.
+
+	if ( getenv ( "HOME" ) )
+		config_files.push_back ( fs::path ( getenv ( "HOME" ) ) / ".avsocks.conf" ); // 用户配置文件.
+
+	config_files.push_back ( "./avsocks.conf" ); // 临时配置文件.
+	BOOST_FOREACH ( fs::path config_file, config_files ) {
+		if ( fs::exists ( config_file ) ) {
+			po::store ( po::parse_config_file<char> ( config_file.c_str(), desc ), vm );
+		}
+	}
 	po::notify(vm);
     
 	if (vm.count("help"))
