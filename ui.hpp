@@ -111,21 +111,21 @@ void avsocks_ui::on_server_mode(wxCommandEvent &event)
     server_mode_->IsChecked()?server_ip_->Enable(false):server_ip_->Enable(true);
 }
 
-// ä¸€ä¸ªç®€å•çš„acceptæœåŠ¡å™¨, ç”¨äºä¸åœçš„å¼‚æ­¥æ¥å—å®¢æˆ·ç«¯çš„è¿æ¥, è¿æ¥å¯èƒ½æ˜¯socks5è¿æ¥æˆ–sslåŠ å¯†æ•°æ®è¿æ¥.
+// Ò»¸ö¼òµ¥µÄaccept·şÎñÆ÷, ÓÃÓÚ²»Í£µÄÒì²½½ÓÊÜ¿Í»§¶ËµÄÁ¬½Ó, Á¬½Ó¿ÉÄÜÊÇsocks5Á¬½Ó»òssl¼ÓÃÜÊı¾İÁ¬½Ó.
 
 void avsocks_ui::do_accept(ip::tcp::acceptor &accepter, socketptr avsocketclient, const boost::system::error_code &ec)
 {
-    // socketå¯¹è±¡
+    // socket¶ÔÏó
     if(!ec)
     {
-        // ä½¿å¾—è¿™ä¸ªavsocketclientæ„é€ ä¸€ä¸ªavclientå¯¹è±¡, å¹¶startè¿›å…¥å·¥ä½œ.
+        // Ê¹µÃÕâ¸öavsocketclient¹¹ÔìÒ»¸öavclient¶ÔÏó, ²¢start½øÈë¹¤×÷.
         avclient::new_avclient(io_, avsocketclient);
     }
 
     if (stop_)
         return;
 
-    // åˆ›å»ºæ–°çš„socket, è¿›å…¥ä¾¦å¬, .
+    // ´´½¨ĞÂµÄsocket, ½øÈëÕìÌı, .
     avsocketclient.reset(new ip::tcp::socket(accepter.get_io_service()));
     accepter.async_accept(*avsocketclient,
         boost::bind(&avsocks_ui::do_accept,this,boost::ref(accepter), avsocketclient, asio::placeholders::error));
