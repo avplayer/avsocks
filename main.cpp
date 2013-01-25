@@ -338,12 +338,12 @@ int main(int argc, char **argv)
 		}
 	}else
 #endif // windows 下自带 fallback 过去就是用这个了.
-    {
-        ip::tcp::endpoint endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport));
+	{
+		ip::tcp::endpoint endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport));
 		acceptor.open( endpoint.protocol());
-        acceptor.bind( endpoint);
-        acceptor.listen();
-    }
+		acceptor.bind( endpoint);
+		acceptor.listen();
+	}
     
 	{
 		socketptr avsocketclient(new asio::ip::tcp::socket(acceptor.get_io_service()));
