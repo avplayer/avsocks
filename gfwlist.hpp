@@ -74,7 +74,7 @@ public:
 				while(!inf.eof()){
 					std::string line;
 					std::getline(inf,line);
-					m_content.push_back(line);
+					m_content_lines.push_back(line);
 				}
 			}
 		}
@@ -134,7 +134,7 @@ private:
 
 		std::string decoded( base64Iterator(str.begin()) , base64Iterator(str.end()));
 
-		boost::split(m_content,decoded,boost::is_any_of("\n"));
+		boost::split(m_content_lines,decoded,boost::is_any_of("\n"));
 	}
 
 private:
@@ -142,5 +142,5 @@ private:
 	fs::path		 			m_cached_gfwlist;
 	urdl::read_stream			m_urdl;
 	asio::streambuf				m_content_base64;
-	std::vector<std::string>	m_content;
+	std::vector<std::string>	m_content_lines;
 };
