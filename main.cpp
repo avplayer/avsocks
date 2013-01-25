@@ -270,9 +270,9 @@ void do_accept(ip::tcp::acceptor &accepter, socketptr avsocketclient, const boos
 
 int main(int argc, char **argv)
 {
-    std::string avserverport = "4567";
-	std::string localport = "4567";
-    std::string avserveraddress = "localhost";// = "avsocks.avplayer.org";//"fysj.com"
+	std::string avserverport;
+	std::string localport;
+	std::string avserveraddress; // = "avsocks.avplayer.org";//"fysj.com"
 	bool is_ipv6 = false;
 
 	po::options_description desc("avsocks options");
