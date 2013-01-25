@@ -38,6 +38,7 @@ namespace fs = boost::filesystem;
 
 #include "splice.hpp"
 #include "avsession.hpp"
+#include "gfwlist.hpp"
 
 typedef boost::shared_ptr< asio::ip::tcp::socket > socketptr;
 typedef asio::ip::tcp::resolver dnsresolver;
