@@ -298,10 +298,10 @@ int main(int argc, char **argv)
 	if ( getenv ( "HOME" ) )
 		config_files.push_back ( fs::path ( getenv ( "HOME" ) ) / ".avsocks.conf" ); // 用户配置文件.
 
-	config_files.push_back ( "./avsocks.conf" ); // 临时配置文件.
+	config_files.push_back ( "avsocks.conf" ); // 临时配置文件.
 	BOOST_FOREACH ( fs::path config_file, config_files ) {
 		if ( fs::exists ( config_file ) ) {
-			po::store ( po::parse_config_file<char> ( (const char *) config_file.c_str(), desc ), vm );
+			po::store ( po::parse_config_file<char> ( config_file.string().c_str(), desc ), vm );
 		}
 	}
 	po::notify(vm);
