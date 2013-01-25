@@ -320,6 +320,8 @@ int main(int argc, char **argv)
 	// 解析 avsocks 服务器地址.
 	avserver_address = *dnsresolver(io_service).resolve(dnsresolver::query(avserveraddress, avserverport));
 
+	gfwlist  gfwlistfile(io_service);
+	gfwlistfile.async_check_and_update();
 	// 不论是 server还是client，都是使用的监听模式嘛。所以创建个 accepter 就可以了.
 	asio::ip::tcp::acceptor acceptor(io_service);
 #ifdef __linux__
