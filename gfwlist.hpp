@@ -164,6 +164,7 @@ public:
 				std::getline(inf,line);
 				m_content_lines.push_back(line);
 			}
+			compile_rules();
 		}
 	}
 
@@ -180,6 +181,11 @@ public:
 	}
 
 private:
+	// 编译规则，编译后的规则更容易匹配.
+	void compile_rules(){
+		//TODO
+	}
+
 	std::string get_domain(const std::string & rule) const {
 		std::size_t pos = rule.find("/");
 		if( pos != std::string::npos){
