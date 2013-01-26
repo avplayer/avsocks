@@ -15,7 +15,7 @@ endif()
 
 set(Boost_USE_MULTITHREADED      OFF)
 
-find_package(Boost REQUIRED system program_options regex filesystem)
+find_package(Boost 1.47 REQUIRED system program_options regex filesystem)
 find_package(OpenSSL REQUIRED)
 find_package(Threads)
 
