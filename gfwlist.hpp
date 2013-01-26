@@ -83,7 +83,7 @@ public:
 	bool is_gfwed(std::string host, unsigned int port = 80) const{
 		boost::replace_all(host, ".", "\\.");
 		boost::regex	regex(host);
-		BOOST_FOREACH(const std::string &l, m_content)
+		BOOST_FOREACH(const std::string &l, m_content_lines)
 		{
 			if( l[0] == '!' || l.empty())
 				continue;
@@ -111,7 +111,7 @@ private:
 			base64_decode();
 			// save to file
 			std::ofstream outf(m_cached_gfwlist.c_str());
-			BOOST_FOREACH(const std::string &l, m_content)
+			BOOST_FOREACH(const std::string &l, m_content_lines)
 			{
 				outf << l;
 			}
