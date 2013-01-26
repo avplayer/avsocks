@@ -1,16 +1,17 @@
+
+// 头文件定义.
+#include "pch.hpp"
+
 // 通过使用 SYMBOL_HIDDEN 让这个类不要导出，减少ELF文件体积.
 #if defined _WIN32 || defined __CYGWIN__
 	#define SYMBOL_HIDDEN
 #else
-	#if __GNUC__ >= 4 || defined __clang__ 
+	#if __GNUC__ >= 4 || defined __clang__
 	#define SYMBOL_HIDDEN  __attribute__ ((visibility ("hidden")))
 	#else
 	#define SYMBOL_HIDDEN
 	#endif
 #endif
-
-// 头文件定义.
-#include "pch.hpp"
 
 #include "sd-daemon.h"
 

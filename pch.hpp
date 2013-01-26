@@ -1,6 +1,6 @@
 
-#pragma once
-
+#ifndef ___PCH____
+#define ___PCH____
 // for pre-compiled header
 
 #include <ctime>
@@ -42,3 +42,5 @@ namespace ssl = asio::ssl;
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 using boost::make_shared;
+
+#endif // ___PCH____
