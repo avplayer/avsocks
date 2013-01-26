@@ -503,8 +503,7 @@ int main(int argc, char **argv)
 	;
 
 	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-    
+	
 	// 读取配置文件, 优先级为: 临时配置 > 用户配置 > 系统配置.
 	std::vector<fs::path> config_files;
 	config_files.push_back ( "/etc/avsocks.conf" ); // 系统配置文件.
@@ -518,6 +517,9 @@ int main(int argc, char **argv)
 			po::store ( po::parse_config_file<char> ( config_file.string().c_str(), desc ), vm );
 		}
 	}
+	
+	po::store(po::parse_command_line(argc, argv, desc), vm);
+	
 	po::notify(vm);
     
 	if (vm.count("help"))
