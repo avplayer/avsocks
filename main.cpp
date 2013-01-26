@@ -40,6 +40,7 @@ namespace fs = boost::filesystem;
 #include "splice.hpp"
 #include "avsession.hpp"
 #include "gfwlist.hpp"
+#include "avauth.hpp"
 
 typedef boost::shared_ptr< asio::ip::tcp::socket > socketptr;
 typedef asio::ip::tcp::resolver dnsresolver;
@@ -48,7 +49,7 @@ typedef asio::ip::tcp::endpoint	hostaddress;
 static asio::io_service	io_service;
 // 用来连接avsocks服务器的地址!
 static hostaddress avserver_address;
-
+static boost::shared_ptr<avauth> auth;
 
 
 // avclient类定义, 每一个客户(可能是socks5或加密ssl)连接, 都将创建一个avclient
@@ -256,7 +257,8 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 			}
 			
 			boost::shared_ptr<avsession<avclient, asio::ip::tcp::socket,ip::tcp::socket> >
-				session(new avsession<avclient, asio::ip::tcp::socket, ip::tcp::socket> (shared_from_this(), *m_socket_client, m_socket_server));
+				session(new avsession<avclient, asio::ip::tcp::socket, 
+					ip::tcp::socket> (shared_from_this(), *m_socket_client, m_socket_server, *auth));
 			session->start(host, port);
 			break;
 	}
@@ -392,7 +394,8 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 		{
 			// 客户端已经被授权了，那么，开始处理吧，支持 SOCKS5 协议哦!
 			boost::shared_ptr<avsession<avclient, ssl::stream<asio::ip::tcp::socket&>,ip::tcp::socket> >
-				session(new avsession<avclient, ssl::stream<asio::ip::tcp::socket&>, ip::tcp::socket> (shared_from_this(), *m_sslstream, m_socket_server));
+				session(new avsession<avclient, ssl::stream<asio::ip::tcp::socket&>, ip::tcp::socket> 
+					(shared_from_this(), *m_sslstream, m_socket_server, *auth));
 			session->start();
 		}
 		else
@@ -536,6 +539,14 @@ int main(int argc, char **argv)
 	// 解析 avsocks 服务器地址.
 	avserver_address = *dnsresolver(io_service).resolve(dnsresolver::query(avserveraddress, avserverport));
 
+	if( !config["authfile"].empty() )
+	{
+		if(fs::exists(config["authfile"]))
+			auth.reset(new avauth(config["authfile"]));
+		else
+			std::cerr << "authfile not exists: " << config["authfile"] << std::endl;
+	}
+	
 	gfwlist  gfwlistfile(io_service);
 	
 	if(config["gfwlist"] == "on")
