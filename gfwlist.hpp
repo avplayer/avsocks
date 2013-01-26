@@ -173,38 +173,73 @@ public:
 			if(!fs::exists(m_cached_gfwlist.parent_path()))
 				fs::create_directory(m_cached_gfwlist.parent_path());
 			do_download = true;
-			}
-
-			if ( do_download ) {
-				// 下载文件吧，下载文件大丈夫.
-				m_https.reset(
-					new urdl::https(io_service, "https://raw.github.com/avplayer/avsocks/master/gfwlist.txt",
-						boost::bind(&gfwlist::handle_downloaded, this, _1, _2))
-				);
-			}else{
-				// load from file
-				std::ifstream inf(m_cached_gfwlist.c_str());
-				while(!inf.eof()){
-					std::string line;
-					std::getline(inf,line);
-					m_content_lines.push_back(line);
-				}
-			}
 		}
 
+		if ( do_download ) {
+			// 下载文件吧，下载文件大丈夫.
+			m_https.reset(
+				new urdl::https(io_service, "https://raw.github.com/avplayer/avsocks/master/gfwlist.txt",
+					boost::bind(&gfwlist::handle_downloaded, this, _1, _2))
+			);
+		}else{
+			// load from file
+			std::ifstream inf(m_cached_gfwlist.c_str());
+			while(!inf.eof()){
+				std::string line;
+				std::getline(inf,line);
+				m_content_lines.push_back(line);
+			}
+		}
+	}
+
 	// 该函数的作用就是检查 gfwlist.txt 判定是否被河蟹.
-	bool is_gfwed(std::string host, unsigned int port = 80) const{
-		boost::replace_all(host, ".", "\\.");
-		boost::regex	regex(host);
+	bool is_gfwed(const std::string host, unsigned int port = 80) const{
 		BOOST_FOREACH(const std::string &l, m_content_lines)
 		{
 			if( l[0] == '!' || l.empty())
 				continue;
-			if( boost::regex_search(l,regex))
+			if( is_matched(host,port, l))
 				return true;
 		}
 		return false;
 	}
+
+private:
+	std::string get_domain(const std::string & rule) const {
+		std::size_t pos = rule.find("/");
+		if( pos != std::string::npos){
+			return rule.substr(0,pos);
+		}
+		return rule;
+	}
+	
+	bool is_domain_match(const std::string &host, const std::string domain) const {
+		return host.find(domain.c_str())!=std::string::npos;
+	}
+
+	bool is_matched(const std::string& host, unsigned int port, const std::string& rule) const {
+		if(rule[0]=='|' && rule[1]=='|'){ // 整个域名匹配.
+			return is_domain_match(host, get_domain(rule.substr(2)));
+		}
+		else if(rule[0]=='@' && rule[1]=='@'){
+			// 反过来
+			return ! is_domain_match(host, get_domain(rule.substr(2)));
+		}else if(rule.substr(0,8) == "|http://"){
+			if( port != 80)
+				return false;
+			return is_domain_match(host, get_domain(rule.substr(8)));
+		}else if(rule.substr(0,9) == "|https://"){
+			if( port != 443)
+				return false;
+			return is_domain_match(host, get_domain(rule.substr(9)));
+		}else { // free style 了. 只匹配 80 端口
+			if( port != 80)
+				return false;
+			return is_domain_match(host, get_domain(rule));
+		}
+		return false;
+	}
+
 private:
 	void handle_downloaded(const boost::system::error_code & ec, asio::streambuf & content){
 		if(!ec){			
