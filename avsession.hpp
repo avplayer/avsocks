@@ -34,7 +34,7 @@ class avsession
 {
 	using boost::enable_shared_from_this<avsession<Towner,S1,S2> >::shared_from_this;
 public:
-	avsession(boost::shared_ptr<Towner> _owner, S1& _s1, S2& _s2, avauth& auth)
+	avsession(boost::shared_ptr<Towner> _owner, S1& _s1, S2& _s2, boost::shared_ptr<avauth> auth)
 	:s1(_s1),s2(_s2),owner(_owner),auth(auth){}
 
 	void start(){
@@ -103,7 +103,7 @@ private:
 			std::string pass(buffer+pos, buffer+pos+pass_len);
 			pos += pass_len;
 			
-			if(auth.auth(user, pass)) 
+			if( !auth || auth->auth(user, pass)) 
 			{
 				s1.async_write_some(asio::buffer("\x05\x00", 2), 
 					boost::bind(&avsession::handle_write,shared_from_this(),ASIO_WRITE_PLACEHOLDERS)
@@ -219,7 +219,7 @@ private:
 	S1&							s1; // 两个 socket
 	S2&							s2; // 两个 socket
 	boost::shared_ptr<Towner>	owner; // 确保 owner 不被析构掉.
-	avauth& auth;
+	boost::shared_ptr<avauth> auth;
 };
 
 #undef  ASIO_READ_PLACEHOLDERS

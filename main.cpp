@@ -266,7 +266,7 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 			
 			boost::shared_ptr<avsession<avclient, asio::ip::tcp::socket,ip::tcp::socket> >
 				session(new avsession<avclient, asio::ip::tcp::socket, 
-					ip::tcp::socket> (shared_from_this(), *m_socket_client, m_socket_server, *auth));
+					ip::tcp::socket> (shared_from_this(), *m_socket_client, m_socket_server, auth));
 			session->start(host, port);
 			break;
 	}
@@ -403,7 +403,7 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 			// 客户端已经被授权了，那么，开始处理吧，支持 SOCKS5 协议哦!
 			boost::shared_ptr<avsession<avclient, ssl::stream<asio::ip::tcp::socket&>,ip::tcp::socket> >
 				session(new avsession<avclient, ssl::stream<asio::ip::tcp::socket&>, ip::tcp::socket> 
-					(shared_from_this(), *m_sslstream, m_socket_server, *auth));
+					(shared_from_this(), *m_sslstream, m_socket_server, auth));
 			session->start();
 		}
 		else
