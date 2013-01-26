@@ -245,6 +245,7 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 					port = ntohs( *(boost::uint16_t*)(buffer+5+dlen));
 					if( gfw.is_gfwed(host, port) ) 
 					{
+						std::cout << "哎哟，撞墙了" << std::endl;
 						start_socks5_helper();
 					}
 				}
