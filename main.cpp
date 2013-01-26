@@ -554,7 +554,7 @@ int main(int argc, char **argv)
 		gfwlistfile.async_check_and_update();
 	}
 	// 不论是 server还是client，都是使用的监听模式嘛。所以创建个 accepter 就可以了.
-	asio::ip::tcp::acceptor acceptor(io_service);
+	boost::shared_ptr<asio::ip::tcp::acceptor> acceptor;
 #ifdef __linux__
 
 	if ( sd_listen_fds ( 0 ) > 0 ) {
@@ -562,27 +562,23 @@ int main(int argc, char **argv)
 
 		if ( sd_is_socket ( fd, AF_INET6, SOCK_STREAM, 1 ) ) { // ipv6 协议.
 			std::cout << "v6" << std::endl;
-			acceptor.assign ( asio::ip::tcp::v6(), fd );
+			acceptor.reset(new ip::tcp::acceptor( io_service, asio::ip::tcp::v6(), fd ));
 		} else if ( sd_is_socket ( fd, AF_INET, SOCK_STREAM, 1 ) ) { // ipv4 协议.
 			std::cout << "v4" << std::endl;
-			acceptor.assign ( asio::ip::tcp::v4(), fd );
+			acceptor.reset(new ip::tcp::acceptor( io_service, asio::ip::tcp::v4(), fd ));
 		} else {
 			std::cerr << "invalid socket passed by systemd" << std::endl;
 			return 1;
 		}
 	}else
 #endif // windows 下自带 fallback 过去就是用这个了.
-	{
-		ip::tcp::endpoint endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport));
-		acceptor.open( endpoint.protocol());
-		acceptor.bind( endpoint);
-		acceptor.listen();
-	}
+	acceptor.reset(new ip::tcp::acceptor( io_service, 
+		ip::tcp::endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport) )));
     
 	{
-		socketptr avsocketclient(new asio::ip::tcp::socket(acceptor.get_io_service()));
-		acceptor.async_accept(*avsocketclient,
-			boost::bind(&do_accept, boost::ref(acceptor), 
+		socketptr avsocketclient(new asio::ip::tcp::socket(acceptor->get_io_service()));
+		acceptor->async_accept(*avsocketclient,
+			boost::bind(&do_accept, boost::ref(*acceptor), 
 				boost::ref(config), boost::ref(gfwlistfile), 
 				avsocketclient, asio::placeholders::error));
 	}
