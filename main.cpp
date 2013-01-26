@@ -245,10 +245,11 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 					std::size_t dlen = buffer[4];
 					host.assign(buffer+5, buffer+5+dlen);
 					port = ntohs( *(boost::uint16_t*)(buffer+5+dlen));
-					if( m_gfwlistfile.is_gfwed(host, port) ) 
+					if( config["gfwlist"] == "on" && m_gfwlistfile.is_gfwed(host, port) ) 
 					{
 						std::cout << "哎哟，撞墙了" << std::endl;
 						start_socks5_helper();
+						return;
 					}
 				}
 				break;
@@ -580,5 +581,11 @@ int main(int argc, char **argv)
 		daemon(0, 0);
 #endif // WIN32
 
+	asio::signal_set signal_set(io_service);
+	signal_set.add(SIGINT);
+	signal_set.add(SIGTERM);
+	signal_set.add(SIGHUP);
+	signal_set.async_wait(boost::bind(&asio::io_service::stop, boost::ref(io_service)));
+	
 	return io_service.run() > 0 ? 0 : 1;
 }
