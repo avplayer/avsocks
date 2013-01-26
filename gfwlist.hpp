@@ -66,13 +66,13 @@ private:
 	void resolved(const boost::system::error_code& ec, ip::tcp::resolver::iterator it){
 		if(!ec){
 			asio::async_connect(m_sslstream->lowest_layer(), it, boost::bind(&https::connected, this, asio::placeholders::error));
-		}
+		}else m_handler(ec, m_response_body);
 	}
 
 	void connected(const boost::system::error_code& ec){
 		if(!ec){
 			m_sslstream->async_handshake(ssl::stream_base::client, boost::bind(&https::hande_handshake, this, asio::placeholders::error));
-		}
+		}else m_handler(ec, m_response_body);
 	}
 
 	void hande_handshake(const boost::system::error_code& ec){
@@ -84,7 +84,7 @@ private:
 				% query % host
 			);
 			asio::async_write(*m_sslstream, asio::buffer(httpheader.c_str(), httpheader.length()), boost::bind(&https::handle_write_header, this, asio::placeholders::error));
-		}
+		}else m_handler(ec, m_response_body);
 	}
 
 	void handle_write_header(const boost::system::error_code& ec){
@@ -93,22 +93,20 @@ private:
 			asio::async_read_until(*m_sslstream, m_response_header, std::string("\r\n\r\n"),
 				boost::bind(&https::handle_read_header, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
 			);
-		}
+		}else m_handler(ec, m_response_body);
 	}
 
 	void handle_read_header(const boost::system::error_code& ec, std::size_t bytes_transferred){
 		if(!ec){
-			std::ostream	stream(&m_response_header);
-// 			std::string		httpstatusline;
-//  			std::getline(stream, httpstatusline, "\r\n");
-
-// 			const char * header = asio::buffer_cast<const char *>(m_response_header.data());
-// 			std::cout << header <<std::endl;
-			asio::async_read(*m_sslstream, m_response_body.prepare(16384),
-				boost::bind(&https::handle_read_body, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
-			);
-		}
-		
+			std::istream	stream(&m_response_header);
+			std::string v1,v2,v3;
+			stream >> v1 >> v2 >> v3;
+			if(v2 == "200"){
+				asio::async_read(*m_sslstream, m_response_body.prepare(16384),
+					boost::bind(&https::handle_read_body, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+				);
+			}else m_handler(asio::error::make_error_code(asio::error::network_reset), m_response_body);
+		}else m_handler(ec, m_response_body);
 	}
 
 	void handle_read_body(const boost::system::error_code& ec, std::size_t bytes_transferred){
@@ -122,7 +120,7 @@ private:
 			// now its full, call the callback hander
 			boost::system::error_code noerror;
 			m_handler(noerror, m_response_body);
-		}
+		}else m_handler(ec, m_response_body);
 	}
 
 	typedef asio::ssl::stream<ip::tcp::socket>	sslsocket;
