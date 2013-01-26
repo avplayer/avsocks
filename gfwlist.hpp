@@ -38,11 +38,7 @@ public:
 // 	template< class Handle>
 	https(asio::io_service& _io_service, std::string url, completedhander handler)
 		:io_service(_io_service),
-	#if BOOST_VERSION >= 104300
 		m_sslctx(ssl::context::sslv23),
-	#else
-		m_sslctx(_io_service, ssl::context::sslv23),
-	#endif
 		resolver(_io_service),
 		m_handler(handler)
 		{

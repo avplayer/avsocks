@@ -128,11 +128,7 @@ avclient::avclient(asio::io_service& _io_service, std::map<std::string, std::str
 	: io_service(_io_service)
 	, m_socket_client(socket)
 	, m_avsocks_serveraddress(avserveraddr)
-#if BOOST_VERSION >= 104300
 	, m_sslctx(ssl::context::sslv23)
-#else
-	, m_sslctx(_io_service, ssl::context::sslv23)
-#endif
 	, m_socket_server(_io_service)
 	, config(config)
 	, m_gfwlistfile(gfwlistfile)
@@ -150,11 +146,7 @@ void avclient::start()
 void avclient::typedetect(const boost::system::error_code& ec)
 {
 	boost::uint8_t buffer[64]={0};
-#if BOOST_VERSION >= 104300
-	int fd = m_socket_client->native_handle();// native_handle();
-#else
-	int fd = m_socket_client->native();
-#endif
+	int fd = m_socket_client->native_handle();
 
 	// 使用 msg_peek, 这样读取的数据并不会从接收缓冲区删除.
 #ifdef WIN32
@@ -439,11 +431,7 @@ void avclient::setup_ssl_cert()
 
 	SSL_CTX *CTX;
 
-#if BOOST_VERSION >= 104600
 	CTX = m_sslctx.native_handle();
-#else
-	CTX = m_sslctx.impl();
-#endif
 
 	X509 *cert = NULL;
 	RSA *rsa = NULL;
