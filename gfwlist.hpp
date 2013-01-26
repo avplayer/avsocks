@@ -10,6 +10,7 @@
 #include <ctime>
 #include <fstream>
 
+#include <boost/noncopyable.hpp>
 #include <boost/regex.hpp>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
@@ -24,7 +25,8 @@ namespace fs = boost::filesystem;
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 
-class gfwlist{
+
+class gfwlist : protected boost::noncopyable{
 public:
 	// 默认构造文件.
 	gfwlist(asio::io_service & _io_service):io_service(_io_service), m_urdl(io_service){
@@ -62,9 +64,7 @@ public:
 			if ( do_download ) {
 				// 下载文件吧，下载文件大丈夫.
 				m_urdl.set_option(urdl::http::user_agent("Mozilla/5.0 (X11; Linux x86_64; rv:18.0) Gecko/20100101 Firefox/18.0"));
- 				m_urdl.async_open(//"file:///home/cai/projects/misc/gfwlist.txt",
- 								   "https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt",
- 				   boost::bind( &gfwlist::googlecode_connected, this, asio::placeholders::error )
+ 				m_urdl.async_open("http://codedoom.net/gfwlist.txt", boost::bind( &gfwlist::googlecode_connected, this, asio::placeholders::error )
  				);
 			}else{
 				// load from file
@@ -72,7 +72,7 @@ public:
 				while(!inf.eof()){
 					std::string line;
 					std::getline(inf,line);
-					m_content.push_back(line);
+					m_content_lines.push_back(line);
 				}
 			}
 		}
@@ -81,7 +81,7 @@ public:
 	bool is_gfwed(std::string host, unsigned int port = 80) const{
 		boost::replace_all(host, ".", "\\.");
 		boost::regex	regex(host);
-		BOOST_FOREACH(const std::string &l, m_content)
+		BOOST_FOREACH(const std::string &l, m_content_lines)
 		{
 			if( l[0] == '!' || l.empty())
 				continue;
@@ -109,7 +109,7 @@ private:
 			base64_decode();
 			// save to file
 			std::ofstream outf(m_cached_gfwlist.c_str());
-			BOOST_FOREACH(const std::string &l, m_content)
+			BOOST_FOREACH(const std::string &l, m_content_lines)
 			{
 				outf << l;
 			}
@@ -132,7 +132,7 @@ private:
 
 		std::string decoded( base64Iterator(str.begin()) , base64Iterator(str.end()));
 
-		boost::split(m_content,decoded,boost::is_any_of("\n"));
+		boost::split(m_content_lines,decoded,boost::is_any_of("\n"));
 	}
 
 private:
@@ -140,5 +140,5 @@ private:
 	fs::path		 			m_cached_gfwlist;
 	urdl::read_stream			m_urdl;
 	asio::streambuf				m_content_base64;
-	std::vector<std::string>	m_content;
+	std::vector<std::string>	m_content_lines;
 };

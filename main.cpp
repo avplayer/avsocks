@@ -106,12 +106,12 @@ private:
 	} m_type;
 
 	asio::io_service&	io_service;
+	gfwlist&			m_gfwlistfile;
 	hostaddress			m_avsocks_serveraddress;
 	socketptr			m_socket_client;
 	ip::tcp::socket		m_socket_server;
 	ssl::context		m_sslctx;
 	boost::shared_ptr<ssl::stream<asio::ip::tcp::socket&> > m_sslstream;
-	gfwlist& 			gfw;
 	// 浏览器想要连接的目标.
 	std::string			host;
 	int					port;
@@ -119,6 +119,7 @@ private:
 
 
 // 下面是avclient的具体实现.
+
 
 avclient::avclient(asio::io_service& _io_service, std::map<std::string, std::string>& config, 
 	gfwlist& gfwlistfile, socketptr socket, hostaddress avserveraddr)
@@ -132,7 +133,7 @@ avclient::avclient(asio::io_service& _io_service, std::map<std::string, std::str
 #endif
 	, m_socket_server(_io_service)
 	, config(config)
-	, gfw(gfwlistfile)
+	, m_gfwlistfile(gfwlistfile)
 {}
 
 void avclient::start()
@@ -243,7 +244,7 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 					std::size_t dlen = buffer[4];
 					host.assign(buffer+5, buffer+5+dlen);
 					port = ntohs( *(boost::uint16_t*)(buffer+5+dlen));
-					if( gfw.is_gfwed(host, port) ) 
+					if( m_gfwlistfile.is_gfwed(host, port) ) 
 					{
 						std::cout << "哎哟，撞墙了" << std::endl;
 						start_socks5_helper();
@@ -425,6 +426,7 @@ void avclient::setup_ssl_cert()
 	SSL_CTX_use_RSAPrivateKey(CTX, rsa);
 	BIO_free_all(bio);
 }
+
 
 void avclient::new_avclient(asio::io_service& io_service, std::map<std::string, std::string>& config,
 	gfwlist& gfwlistfile, socketptr socket, hostaddress avserveraddr/* = avserver_address*/)
