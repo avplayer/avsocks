@@ -43,6 +43,12 @@ public:
  			boost::bind(&avsession::handle_socks5_read,shared_from_this(),ASIO_READ_PLACEHOLDERS)
  		);
 	}
+	
+	// 都已经看完了，就不用遮掩了.
+	void start(std::string host, int port)
+	{
+		resolve_dnshost(host, port);
+	}
 
 private:
 	void handle_socks5_read(const boost::system::error_code & ec, std::size_t bytes_transferred){
@@ -121,7 +127,12 @@ private:
 		int port = ntohs( *(boost::uint16_t*)(buffer+ s1readbuf.size()-2));
 		// 好的，目的地址和端口都获得了，执行DNS解析，链接，etc工作.
 
- 		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
+		resolve_dnshost(host, port);
+	}
+	
+	void resolve_dnshost(std::string host,int port)
+	{
+		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
  		boost::shared_ptr<ip::tcp::resolver> resolver(new ip::tcp::resolver(s1.get_io_service()));
  		resolver->async_resolve(query,
  			boost::bind(&avsession::handle_resolve_remote,shared_from_this(),resolver,asio::placeholders::error,asio::placeholders::iterator)
