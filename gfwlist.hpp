@@ -213,17 +213,17 @@ private:
 		return rule;
 	}
 	
-	bool is_domain_match(const std::string &host, const std::string domain) const {
-		return host.find(domain.c_str())!=std::string::npos;
+	bool is_domain_match(const std::string &host, const std::string& domain) const {
+		bool ret = host.find(domain.c_str())!=std::string::npos;
+		return ret;
 	}
 
 	bool is_matched(const std::string& host, unsigned int port, const std::string& rule) const {
 		if(rule[0]=='|' && rule[1]=='|'){ // 整个域名匹配.
 			return is_domain_match(host, get_domain(rule.substr(2)));
-		}
-		else if(rule[0]=='@' && rule[1]=='@'){
+		}else if(rule[0]=='@' && rule[1]=='@'){
 			// 反过来
-			return ! is_domain_match(host, get_domain(rule.substr(2)));
+			return false;
 		}else if(rule.substr(0,8) == "|http://"){
 			if( port != 80)
 				return false;
@@ -232,6 +232,13 @@ private:
 			if( port != 443)
 				return false;
 			return is_domain_match(host, get_domain(rule.substr(9)));
+		}else if(rule.substr(0,9) == "/^https?:")
+		{
+			if(port == 443)
+				return false;
+		}else if(rule[0]=='/' || rule.substr(0,2) == "!-"){
+			// url 模式暂时不支持
+			return false;
 		}else { // free style 了. 只匹配 80 端口
 			if( port != 80)
 				return false;
