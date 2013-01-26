@@ -97,6 +97,7 @@ private:
 	void detect_ifgfwed(const boost::system::error_code & ec, std::size_t bytes_transferred, int state);
 	void start_socks5_helper();
 	void handle_socks5_auth(const boost::system::error_code & ec, std::size_t bytes_transferred, int state);
+	void socks5_send_request();
 
 private:
 
@@ -287,6 +288,24 @@ void avclient::handle_avserver_connected(const boost::system::error_code& ec)
 	}
 }
 
+void avclient::socks5_send_request()
+{
+	boost::uint8_t buffer[512];
+	std::size_t len = 0;
+	buffer[len++] = 5;
+	buffer[len++] = 1;		// CONNECT.
+	buffer[len++] = 0;		// RSV.
+	buffer[len++] = 3;		// ATYP:DOMAIN.
+	buffer[len++] = host.size();
+	std::copy(host.begin(), host.end(), buffer + len);
+	len += host.size();
+	*(boost::uint16_t*)(buffer+len) = htons(port);
+	len += 2;
+	m_sslstream->async_write_some(asio::buffer(buffer, len), 
+		boost::bind(&avclient::handle_socks5_auth, shared_from_this(), _1, _2, 4));
+}
+
+
 void avclient::handle_socks5_auth(const boost::system::error_code& ec, std::size_t bytes_transferred, int state)
 {
 	if(ec)
@@ -311,9 +330,7 @@ void avclient::handle_socks5_auth(const boost::system::error_code& ec, std::size
 				// 服务器说不要认证.
 				if(buffer[1] == 0x00)
 				{
-					boost::shared_ptr<avsocks::splice<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
-						splice(new avsocks::splice<avclient, ip::tcp::socket, ssl::stream<asio::ip::tcp::socket&> > (shared_from_this(), *m_socket_client, *m_sslstream));
-					splice->start();
+					socks5_send_request();
 				}
 				// 服务器需要认证.
 				else if(buffer[1] == 0x02 && ! config["auth"].empty())
@@ -352,10 +369,14 @@ void avclient::handle_socks5_auth(const boost::system::error_code& ec, std::size
 			n = m_sslstream->read_some(asio::buffer(buffer), ec_);
 			if( n == 2 && buffer[0] == 5 && buffer[1] == 0)
 			{
-				boost::shared_ptr<avsocks::splice<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
-					splice(new avsocks::splice<avclient, ip::tcp::socket, ssl::stream<asio::ip::tcp::socket&> > (shared_from_this(), *m_socket_client, *m_sslstream));
-				splice->start();
+				socks5_send_request();
 			}
+		}
+		case 4: // 已经将请求发送给服务器，开始对接.
+		{
+			boost::shared_ptr<avsocks::splice<avclient,ip::tcp::socket,ssl::stream<asio::ip::tcp::socket&> > >
+				splice(new avsocks::splice<avclient, ip::tcp::socket, ssl::stream<asio::ip::tcp::socket&> > (shared_from_this(), *m_socket_client, *m_sslstream));
+			splice->start();
 		}
 		break;
 	}
