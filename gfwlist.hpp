@@ -64,9 +64,7 @@ public:
 			if ( do_download ) {
 				// 下载文件吧，下载文件大丈夫.
 				m_urdl.set_option(urdl::http::user_agent("Mozilla/5.0 (X11; Linux x86_64; rv:18.0) Gecko/20100101 Firefox/18.0"));
- 				m_urdl.async_open(//"file:///home/cai/projects/misc/gfwlist.txt",
- 								   "https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt",
- 				   boost::bind( &gfwlist::googlecode_connected, this, asio::placeholders::error )
+ 				m_urdl.async_open("http://codedoom.net/gfwlist.txt", boost::bind( &gfwlist::googlecode_connected, this, asio::placeholders::error )
  				);
 			}else{
 				// load from file
