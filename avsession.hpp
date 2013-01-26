@@ -43,6 +43,12 @@ public:
  			boost::bind(&avsession::handle_socks5_read,shared_from_this(),ASIO_READ_PLACEHOLDERS)
  		);
 	}
+	
+	// 都已经看完了，就不用遮掩了.
+	void start(std::string host, int port)
+	{
+		resolve_dnshost(host, port);
+	}
 
 private:
 	void handle_socks5_read(const boost::system::error_code & ec, std::size_t bytes_transferred){
@@ -57,8 +63,8 @@ private:
 			switch(buffer[1+count])
  			{
  			case 2: // 用户名/密码 认证 TODO 
-// 				g_socket_send(socket,"\005\002",2,0,0);
-// 				g_socket_add_watch(socket,G_IO_IN,5,(GSocketSourceFunc)get_socks5_username,session);
+				s1.async_write_some(asio::buffer("\x05\x02", 2),
+					boost::bind(&avsession::handle_send_auth, shared_from_this(), ASIO_WRITE_PLACEHOLDERS));
  				s1readbuf.consume(s1readbuf.size());
 				return ;
  			case 0: // 没认证，很好
@@ -71,6 +77,49 @@ private:
 				);
   				return ;
  			}
+		}
+	}
+	
+	void handle_send_auth(const boost::system::error_code & ec, std::size_t bytes_transferred)
+	{
+		s1.async_read_some(s1readbuf.prepare(1024),
+			boost::bind(&avsession::handle_recv_auth, shared_from_this(), ASIO_READ_PLACEHOLDERS));
+	}
+	
+	void handle_recv_auth(const boost::system::error_code & ec, std::size_t bytes_transferred)
+	{
+		s1readbuf.commit(bytes_transferred);
+		const boost::uint8_t* buffer = asio::buffer_cast<const boost::uint8_t*>(s1readbuf.data());
+		if(buffer[0] == 5) // 检查版本号.
+		{
+			std::size_t pos = 1;
+			
+			std::size_t user_len = buffer[pos++];
+			std::string user(buffer+pos, buffer+pos+user_len);
+			pos += user_len;
+			
+			std::size_t pass_len = buffer[pos++];
+			std::string pass(buffer+pos, buffer+pos+pass_len);
+			pos += pass_len;
+			
+			//TODO auth
+			if(true) 
+			{
+				s1.async_write_some(asio::buffer("\x05\x00", 2), 
+					boost::bind(&avsession::handle_write,shared_from_this(),ASIO_WRITE_PLACEHOLDERS)
+				);
+				s1.async_read_some(s1readbuf.prepare(5),
+					boost::bind(&avsession::handle_read_socks5_magic,shared_from_this(),ASIO_READ_PLACEHOLDERS)
+				);
+			}
+			else
+			{
+				// 认证失败.
+				s1.async_write_some(asio::buffer("\x05\x01"),
+					boost::bind(&avsession::handle_write,shared_from_this(),ASIO_WRITE_PLACEHOLDERS)
+				);
+			}
+			s1readbuf.consume(bytes_transferred);
 		}
 	}
 
@@ -121,7 +170,12 @@ private:
 		int port = ntohs( *(boost::uint16_t*)(buffer+ s1readbuf.size()-2));
 		// 好的，目的地址和端口都获得了，执行DNS解析，链接，etc工作.
 
- 		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
+		resolve_dnshost(host, port);
+	}
+	
+	void resolve_dnshost(std::string host,int port)
+	{
+		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
  		boost::shared_ptr<ip::tcp::resolver> resolver(new ip::tcp::resolver(s1.get_io_service()));
  		resolver->async_resolve(query,
  			boost::bind(&avsession::handle_resolve_remote,shared_from_this(),resolver,asio::placeholders::error,asio::placeholders::iterator)
