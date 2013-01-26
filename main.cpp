@@ -581,5 +581,11 @@ int main(int argc, char **argv)
 		daemon(0, 0);
 #endif // WIN32
 
+	asio::signal_set signal_set(io_service);
+	signal_set.add(SIGINT);
+	signal_set.add(SIGTERM);
+	signal_set.add(SIGHUP);
+	signal_set.async_wait(boost::bind(&asio::io_service::stop, boost::ref(io_service)));
+	
 	return io_service.run() > 0 ? 0 : 1;
 }
