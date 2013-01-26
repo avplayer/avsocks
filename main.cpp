@@ -10,30 +10,7 @@
 #endif
 
 // 头文件定义.
-#include <iostream>
-#include <boost/version.hpp>
-#include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/make_shared.hpp>
-using boost::make_shared;
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
-namespace asio = boost::asio;
-namespace ip = asio::ip;
-#include <boost/asio/ssl.hpp>
-namespace ssl = asio::ssl;
-
-#include <boost/program_options.hpp>
-namespace po = boost::program_options;
-#include <boost/lexical_cast.hpp>
-
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
-
-#include <boost/foreach.hpp>
-#include <map>
+#include "pch.hpp"
 
 #include "sd-daemon.h"
 

@@ -7,28 +7,7 @@
 
 #pragma once
 
-#include <ctime>
-#include <fstream>
-#include <iostream>
-#include <string>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/noncopyable.hpp>
-#include <boost/regex.hpp>
-#include <boost/format.hpp>
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
-namespace asio = boost::asio;
-namespace ip = boost::asio::ip;
-namespace ssl = boost::asio::ssl;
-#include <boost/filesystem.hpp>
-#include <boost/concept_check.hpp>
-namespace fs = boost::filesystem;
-#include <boost/algorithm/string.hpp>
-#include <boost/foreach.hpp>
-#include <boost/archive/iterators/binary_from_base64.hpp>
-#include <boost/archive/iterators/transform_width.hpp>
+#include "pch.hpp"
 
 namespace urdl{
 
