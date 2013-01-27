@@ -13,7 +13,7 @@ if(USE_STATIC)
 	set(Boost_USE_STATIC_RUNTIME    ON)
 endif()
 
-set(Boost_USE_MULTITHREADED      OFF)
+
 
 find_package(Boost 1.47 REQUIRED system program_options regex filesystem)
 find_package(OpenSSL REQUIRED)

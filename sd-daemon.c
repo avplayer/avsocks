@@ -23,7 +23,7 @@
   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 ***/
-#ifdef __linux__
+#ifndef WIN32
 
 #include <sys/types.h>
 #include <sys/stat.h>

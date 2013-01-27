@@ -127,11 +127,11 @@ void avclient::typedetect(const boost::system::error_code& ec)
 	int fd = m_socket_client->native_handle();
 
 	// 使用 msg_peek, 这样读取的数据并不会从接收缓冲区删除.
-#ifdef WIN32
+#if defined(WIN32) || defined(__APPLE__)
 	recv(fd, (char*)buffer, sizeof(buffer), MSG_PEEK);
 #else
 	recv(fd, buffer, sizeof(buffer), MSG_PEEK|MSG_NOSIGNAL|MSG_DONTWAIT);
-#endif // WIN32
+#endif // WIN32 or __APPLE__
 
 	// 检查 socks5.
 	if(buffer[0] == 0x05 || buffer[0] == 'G')
