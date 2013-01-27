@@ -220,9 +220,7 @@ private:
 		}else if(rule[0]=='/' || rule.substr(0,2) == "!-"){
 			// url 模式暂时不支持
 			return false;
-		}else { // free style 了. 只匹配 80 端口
-			if( port != 80)
-				return false;
+		}else { // free style 了. 
 			return is_domain_match(host, get_domain(rule));
 		}
 		return false;
