@@ -96,8 +96,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="avauth.hpp" />
     <ClInclude Include="avsession.hpp" />
     <ClInclude Include="cert.hpp" />
+    <ClInclude Include="gfwlist.hpp" />
+    <ClInclude Include="pch.hpp" />
     <ClInclude Include="splice.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
