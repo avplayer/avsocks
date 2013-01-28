@@ -72,11 +72,11 @@ private:
 	void handle_avserver_connected(const boost::system::error_code & ec) SYMBOL_HIDDEN;
 	// 设置证书和私钥信息.
 	void setup_ssl_cert() SYMBOL_HIDDEN;
-	void start_ssl_handshake();
-	void detect_ifgfwed(const boost::system::error_code & ec, std::size_t bytes_transferred, int state);
-	void start_socks5_helper();
-	void handle_socks5_auth(const boost::system::error_code & ec, std::size_t bytes_transferred, int state);
-	void socks5_send_request();
+	void start_ssl_handshake() SYMBOL_HIDDEN;
+	void detect_ifgfwed(const boost::system::error_code & ec, std::size_t bytes_transferred, int state) SYMBOL_HIDDEN;
+	void start_socks5_helper() SYMBOL_HIDDEN;
+	void handle_socks5_auth(const boost::system::error_code & ec, std::size_t bytes_transferred, int state) SYMBOL_HIDDEN;
+	void socks5_send_request() SYMBOL_HIDDEN;
 
 private:
 

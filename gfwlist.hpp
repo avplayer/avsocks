@@ -9,7 +9,17 @@
 
 #include "pch.hpp"
 
-namespace urdl{
+#if defined _WIN32 || defined __CYGWIN__
+	#define SYMBOL_HIDDEN
+#else
+	#if __GNUC__ >= 4 || defined __clang__
+	#define SYMBOL_HIDDEN  __attribute__ ((visibility ("hidden")))
+	#else
+	#define SYMBOL_HIDDEN
+	#endif
+#endif
+
+namespace urdl{ 
 
 class SYMBOL_HIDDEN https : protected boost::noncopyable{
 public:
@@ -20,7 +30,7 @@ public:
 		m_sslctx(ssl::context::sslv23),
 		resolver(_io_service),
 		m_handler(handler)
-		{
+	{
 		method = "GET";
 		std::size_t dem =  url.find("://");
 		if( url.substr(0,dem) == "https"){
