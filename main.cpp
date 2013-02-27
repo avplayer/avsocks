@@ -204,25 +204,14 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 			{
 				case 0x01:// IPv4.
 				{
+					// ipv4 模式无法执行　GFW 匹配，全部走SSL通道.
+
 					boost::asio::ip::tcp::endpoint endp;
 					endp.address(boost::asio::ip::address_v4(ntohl(*((boost::uint32_t*)(buffer + 4)))));
 					endp.port(ntohs(*((boost::uint16_t*)(buffer+8))));
 					host = endp.address().to_string();
 					port = endp.port();
-					if( config["gfwlist"] == "on" )
-					{
-						if( m_gfwlistfile.is_gfwed(host, port) )
-						{
-							std::cout << "Oooops, " << host << " has been gfwed!!! " << std::endl;
-							start_socks5_helper();
-							return;
-						}
-					}
-					else
-					{
-						start_socks5_helper();
-						return;
-					}
+					start_socks5_helper();
 				}
 				break;
 				case 0x03:
