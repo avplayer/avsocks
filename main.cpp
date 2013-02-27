@@ -1,4 +1,3 @@
-
 // 头文件定义.
 #include "pch.hpp"
 
@@ -204,11 +203,11 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 			{
 				case 0x01:// IPv4.
 				{
-					boost::uint32_t addr = ntohl(*(boost::uint32_t*)(buffer+4));
-					struct in_addr ia;
-					ia.s_addr = addr;
-					host = inet_ntoa(ia);
-					port = ntohs(*(boost::uint16_t*)(buffer+8));
+					boost::asio::ip::tcp::endpoint endp;
+					endp.address(boost::asio::ip::address_v4(ntohl(*((boost::uint32_t*)(buffer + 4)))));
+					endp.port(ntohs(*((boost::uint16_t*)(buffer+8))));
+					host = endp.address().to_string();
+					port = endp.port();
 				}	
 				break;
 				case 0x03:
