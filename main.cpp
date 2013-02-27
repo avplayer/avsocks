@@ -34,24 +34,25 @@ static boost::shared_ptr<avauth> auth;
 // 如果是socks5连接, 则将启动avsession; 如果是ssl, 则转发数据到远程server中.
 //
 // Fuck墙的工程流程大致如下图所示:
-//   
+//
 //                   +---------------+     |     +-------------+
 //   browser/app --> | socks5 -> ssl | ----|---> | ssl -> sock |--> website/server
 //                   +---------------+     |     +-------------+
 //                                        GFW
-//   
+//
+
 class avclient
 	: public boost::enable_shared_from_this<avclient>
 	, private boost::noncopyable
 {
 public:
 	typedef boost::shared_ptr<avclient>	avclientptr;
-	
+
 	std::map<std::string, std::string>& config;
 
 public:
 	// avclient构造析构函数.
-	avclient(asio::io_service& _io_service, std::map<std::string, std::string>& config, 
+	avclient(asio::io_service& _io_service, std::map<std::string, std::string>& config,
 		gfwlist& gfwlistfile, socketptr socket, hostaddress avserveraddr);
 
 	// 创建一个avclient对象, 并进入工作.
@@ -100,7 +101,7 @@ private:
 // 下面是avclient的具体实现.
 
 
-avclient::avclient(asio::io_service& _io_service, std::map<std::string, std::string>& config, 
+avclient::avclient(asio::io_service& _io_service, std::map<std::string, std::string>& config,
 	gfwlist& gfwlistfile, socketptr socket, hostaddress avserveraddr)
 	: io_service(_io_service)
 	, m_socket_client(socket)
@@ -148,7 +149,7 @@ void avclient::typedetect(const boost::system::error_code& ec)
 	{
 		// 否则就是 ssl handshake 了.
 		m_type = AVCLIENT_TYPE_SERVER;
-		
+
 		start_ssl_handshake();
 	}
 }
@@ -166,9 +167,9 @@ void avclient::start_socks5_helper()
 void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t bytes_transferred, int state)
 {
 	// 出错了就没了.
-	if(ec) 
+	if(ec)
 		return;
-	
+
 	boost::uint8_t buffer[300]={0};
 	boost::system::error_code ec_;
 	std::size_t n;
@@ -183,22 +184,22 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 			asio::async_write(*m_socket_client, asio::buffer("\x05\x00", 2),
 				boost::bind(&avclient::detect_ifgfwed, shared_from_this(), _1, _2, 1));
 			break;
-			
+
 		case 1: // 读取客户端请求.
 			m_socket_client->async_read_some(asio::null_buffers(),
 				boost::bind(&avclient::detect_ifgfwed, shared_from_this(), _1, _2, 2));
 			break;
-			
+
 		case 2: //
 			n = m_socket_client->read_some(boost::asio::buffer(buffer), ec_);
-			
+
 			// 只支持CONNECT
 			if(!(buffer[0]==5 && buffer[1] == 1))
 			{
 				std::cerr << "only suppport CONNECT now" << std::endl;
 				return;
 			}
-			
+
 			switch(buffer[3])
 			{
 				case 0x01:// IPv4.
@@ -208,14 +209,14 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 					endp.port(ntohs(*((boost::uint16_t*)(buffer+8))));
 					host = endp.address().to_string();
 					port = endp.port();
-				}	
+				}
 				break;
 				case 0x03:
 				{
 					std::size_t dlen = buffer[4];
 					host.assign(buffer+5, buffer+5+dlen);
 					port = ntohs( *(boost::uint16_t*)(buffer+5+dlen));
-					if( config["gfwlist"] == "on" )	
+					if( config["gfwlist"] == "on" )
 					{
 						if( m_gfwlistfile.is_gfwed(host, port) )
 						{
@@ -223,7 +224,7 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 							start_socks5_helper();
 							return;
 						}
-					} 
+					}
 					else
 					{
 						start_socks5_helper();
@@ -232,14 +233,13 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 				}
 				break;
 			}
-			
+
 			boost::shared_ptr<avsession<avclient, asio::ip::tcp::socket,ip::tcp::socket> >
 				session(new avsession<avclient, asio::ip::tcp::socket, 
 					ip::tcp::socket> (shared_from_this(), *m_socket_client, m_socket_server, auth));
 			session->start(host, port);
 			break;
 	}
-	
 }
 
 void avclient::start_ssl_handshake()
@@ -281,7 +281,7 @@ void avclient::socks5_send_request()
 	len += host.size();
 	*(boost::uint16_t*)(buffer+len) = htons(port);
 	len += 2;
-	m_sslstream->async_write_some(asio::buffer(buffer, len), 
+	m_sslstream->async_write_some(asio::buffer(buffer, len),
 		boost::bind(&avclient::handle_socks5_auth, shared_from_this(), _1, _2, 4));
 }
 
@@ -290,11 +290,11 @@ void avclient::handle_socks5_auth(const boost::system::error_code& ec, std::size
 {
 	if(ec)
 		return;
-	switch(state) 
+	switch(state)
 	{
 		case 0: // 发送完验证方式.
 		{
-			m_sslstream->async_read_some(asio::null_buffers(), 
+			m_sslstream->async_read_some(asio::null_buffers(),
 				boost::bind(&avclient::handle_socks5_auth, shared_from_this(), _1, _2, 1));
 		}
 		break;
@@ -304,7 +304,7 @@ void avclient::handle_socks5_auth(const boost::system::error_code& ec, std::size
 			boost::system::error_code ec_;
 			// 理论上来说，应该是读取到两个字节.
 			m_sslstream->read_some(asio::buffer(buffer, 256), ec_);
-			
+
 			if(buffer[0] == 0x05)
 			{
 				// 服务器说不要认证.
@@ -316,7 +316,7 @@ void avclient::handle_socks5_auth(const boost::system::error_code& ec, std::size
 				else if(buffer[1] == 0x02 && ! config["auth"].empty())
 				{
 					boost::uint8_t data[1024];
-					std::size_t pos = 0; 
+					std::size_t pos = 0;
 					data[pos++] = 5;
 					std::vector<std::string> user_pass;
 					boost::split(user_pass, config["auth"], boost::is_any_of(":"));
@@ -438,7 +438,7 @@ void avclient::new_avclient(asio::io_service& io_service, std::map<std::string, 
 
 // 一个简单的accept服务器, 用于不停的异步接受客户端的连接, 连接可能是socks5连接或ssl加密数据连接.
 static
-void do_accept(ip::tcp::acceptor &accepter, std::map<std::string, std::string>& config, 
+void do_accept(ip::tcp::acceptor &accepter, std::map<std::string, std::string>& config,
 			   gfwlist& gfwlistfile, socketptr avsocketclient, const boost::system::error_code &ec)
 {
 	// socket对象
@@ -451,8 +451,8 @@ void do_accept(ip::tcp::acceptor &accepter, std::map<std::string, std::string>& 
 	// 创建新的socket, 进入侦听, .
 	avsocketclient.reset(new ip::tcp::socket(accepter.get_io_service()));
 	accepter.async_accept(*avsocketclient,
-		boost::bind(&do_accept, boost::ref(accepter), 
-			boost::ref(config), boost::ref(gfwlistfile), 
+		boost::bind(&do_accept, boost::ref(accepter),
+			boost::ref(config), boost::ref(gfwlistfile),
 				avsocketclient, asio::placeholders::error));
 }
 
@@ -480,7 +480,7 @@ int main(int argc, char **argv)
 	;
 
 	po::variables_map vm;
-	
+
 	// 读取配置文件, 优先级为: 临时配置 > 用户配置 > 系统配置.
 	std::vector<fs::path> config_files;
 	config_files.push_back ( "/etc/avsocks.conf" ); // 系统配置文件.
@@ -494,11 +494,11 @@ int main(int argc, char **argv)
 			po::store ( po::parse_config_file<char> ( config_file.string().c_str(), desc ), vm );
 		}
 	}
-	
+
 	po::store(po::parse_command_line(argc, argv, desc), vm);
-	
+
 	po::notify(vm);
-    
+
 	if (vm.count("help"))
 	{
 		std::cerr <<  desc <<  std::endl;
@@ -519,9 +519,9 @@ int main(int argc, char **argv)
 		else
 			std::cerr << "authfile not exists: " << config["authfile"] << std::endl;
 	}
-	
+
 	gfwlist  gfwlistfile(io_service);
-	
+
 	if(config["gfwlist"] == "on")
 	{
 		gfwlistfile.async_check_and_update();
@@ -545,14 +545,14 @@ int main(int argc, char **argv)
 		}
 	}else
 #endif // windows 下自带 fallback 过去就是用这个了.
-	acceptor.reset(new ip::tcp::acceptor( io_service, 
+	acceptor.reset(new ip::tcp::acceptor( io_service,
 		ip::tcp::endpoint(is_ipv6 ? ip::tcp::v6() : ip::tcp::v4(), boost::lexical_cast<int>(localport) )));
-    
+
 	{
 		socketptr avsocketclient(new asio::ip::tcp::socket(acceptor->get_io_service()));
 		acceptor->async_accept(*avsocketclient,
-			boost::bind(&do_accept, boost::ref(*acceptor), 
-				boost::ref(config), boost::ref(gfwlistfile), 
+			boost::bind(&do_accept, boost::ref(*acceptor),
+				boost::ref(config), boost::ref(gfwlistfile),
 				avsocketclient, asio::placeholders::error));
 	}
 
@@ -568,6 +568,6 @@ int main(int argc, char **argv)
 	signal_set.add(SIGHUP);
 #endif
 	signal_set.async_wait(boost::bind(&asio::io_service::stop, boost::ref(io_service)));
-	
+
 	return io_service.run() > 0 ? 0 : 1;
 }
