@@ -209,6 +209,20 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 					endp.port(ntohs(*((boost::uint16_t*)(buffer+8))));
 					host = endp.address().to_string();
 					port = endp.port();
+					if( config["gfwlist"] == "on" )
+					{
+						if( m_gfwlistfile.is_gfwed(host, port) )
+						{
+							std::cout << "Oooops, " << host << " has been gfwed!!! " << std::endl;
+							start_socks5_helper();
+							return;
+						}
+					}
+					else
+					{
+						start_socks5_helper();
+						return;
+					}
 				}
 				break;
 				case 0x03:
