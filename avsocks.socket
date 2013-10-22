@@ -1,9 +1,0 @@
-[Unit]
-Description=Fuck the gfw
-Conflicts=avsocks.service
-
-[Socket]
-ListenStream=4567
-
-[Install]
-WantedBy=sockets.target
