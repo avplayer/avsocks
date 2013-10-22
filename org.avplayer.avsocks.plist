@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>Label</key>
+		<string>org.avplayer.avsocks</string>
+		<key>ProgramArguments</key>
+		<array>
+			<!-- your program path -->
+			<string>/usr/local/bin/avsocks</string>
+			<!-- your avsocks server -->
+			<string>--avserver</string>
+			<string>PUT YOUR SERVER ADDRESS HERE</string>
+			<!-- the gfwlist have some problems, turn it off -->
+			<string>--gfwlist</string>
+			<string>off</string>
+		</array>
+		<key>KeepAlive</key>
+		<true/>
+	</dict>
+</plist>
