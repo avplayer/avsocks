@@ -440,8 +440,7 @@ void avclient::new_avclient(asio::io_service& io_service, std::map<std::string, 
 
 
 // 一个简单的accept服务器, 用于不停的异步接受客户端的连接, 连接可能是socks5连接或ssl加密数据连接.
-static
-void do_accept(ip::tcp::acceptor &accepter, std::map<std::string, std::string>& config,
+static void do_accept(ip::tcp::acceptor &accepter, std::map<std::string, std::string>& config,
 			   gfwlist& gfwlistfile, socketptr avsocketclient, const boost::system::error_code &ec)
 {
 	// socket对象

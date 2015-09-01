@@ -2,3 +2,6 @@
 	path = third_party/openssl
 	url = git://gitcafe.com/microcai/openssl-cmake.git
 	branch = master
+[submodule "avboost"]
+	path = avboost
+	url = https://github.com/avplayer/avboost.git
