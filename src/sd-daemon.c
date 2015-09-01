@@ -23,7 +23,7 @@
   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 ***/
-#ifndef WIN32
+#ifndef _WIN32
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -45,8 +45,10 @@
 
 #elif defined(_WIN32)
 
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h> // 防止编译失败嘛.
-
+#include <Winsock2.h>
+#include <ws2ipdef.h>
 #endif
 
 #include "sd-daemon.h"
@@ -148,7 +150,10 @@ finish:
 }
 
 static int sd_is_socket_internal(int fd, int type, int listening) {
-        struct stat st_fd;
+#if defined(DISABLE_SYSTEMD) || !defined(__linux__)
+	return 0;
+#else
+	struct stat st_fd;
 
         if (fd < 0 || type < 0)
                 return -EINVAL;
@@ -188,18 +193,24 @@ static int sd_is_socket_internal(int fd, int type, int listening) {
         }
 
         return 1;
+#endif
 }
 
 union sockaddr_union {
         struct sockaddr sa;
         struct sockaddr_in in4;
         struct sockaddr_in6 in6;
-        struct sockaddr_un un;
+#ifndef _WIN32
+		struct sockaddr_un un;
+#endif
         struct sockaddr_storage storage;
 };
 
 _sd_export_ int sd_is_socket(int fd, int family, int type, int listening) {
-        int r;
+#if defined(DISABLE_SYSTEMD) || !defined(__linux__)
+	return 0;
+#else
+	    int r;
 
         if (family < 0)
                 return -EINVAL;
@@ -225,6 +236,7 @@ _sd_export_ int sd_is_socket(int fd, int family, int type, int listening) {
         }
 
         return 1;
+#endif
 }
 
 _sd_export_ int sd_notify(int unset_environment, const char *state) {

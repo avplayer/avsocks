@@ -74,9 +74,21 @@ endif()
 find_package(Boost 1.47 REQUIRED system program_options regex filesystem)
 find_package(Threads)
 
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${OPENSSL_INCLUDE_DIR})
+link_libraries(${OPENSSL_LIBRARIES})
+link_directories(${Boost_LIBRARY_DIR})
+include_directories(${Boost_INCLUDE_DIR})
 
-add_executable(avsocks main.cpp sd-daemon.c)
+if(WIN32)
+	add_definitions(-DDISABLE_SYSTEMD)
+endif()
+
+add_executable(avsocks
+	src/avauth.hpp src/gfwlist.hpp  src/sd-daemon.c
+	src/avsession.hpp  src/main.cpp     src/sd-daemon.h
+	src/cert.hpp       src/pch.hpp      src/splice.hpp
+)
+
 target_link_libraries(avsocks ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 install(TARGETS avsocks RUNTIME DESTINATION bin)
