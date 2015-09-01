@@ -1,0 +1,4 @@
+[submodule "third_party/openssl"]
+	path = third_party/openssl
+	url = git://gitcafe.com/microcai/openssl-cmake.git
+	branch = master
