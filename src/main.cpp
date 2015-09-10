@@ -478,7 +478,7 @@ int main(int argc, char **argv)
 		( "daemon,d",																			"go into daemon mode" )
 		( "auth",		po::value<std::string>(&config["auth"]),								"username:password pair" )
 		( "authfile",	po::value<std::string>(&config["authfile"]),							"a file consist of username password pair" )
-		( "gfwlist",	po::value<std::string>(&config["gfwlist"])->default_value("on"),		"enable gfwlist [on|off]")
+		( "gfwlist",	po::value<std::string>(&config["gfwlist"])->default_value("off"),		"enable gfwlist [on|off]")
 	;
 
 	po::variables_map vm;
