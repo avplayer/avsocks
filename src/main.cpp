@@ -451,7 +451,7 @@ static void do_accept(ip::tcp::acceptor &accepter, std::map<std::string, std::st
 	}
 
 	// 创建新的socket, 进入侦听, .
-	avsocketclient.reset(new ip::tcp::socket(accepter.get_io_service()));
+	avsocketclient.reset(new ip::tcp::socket(accepter.get_executor()));
 	accepter.async_accept(*avsocketclient,
 		boost::bind(&do_accept, boost::ref(accepter),
 			boost::ref(config), boost::ref(gfwlistfile),
