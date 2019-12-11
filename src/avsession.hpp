@@ -176,7 +176,7 @@ private:
 	void resolve_dnshost(std::string host,int port)
 	{
 		ip::tcp::resolver::query query(host,boost::lexical_cast<std::string>(port));
- 		boost::shared_ptr<ip::tcp::resolver> resolver(new ip::tcp::resolver(s1.get_io_service()));
+ 		boost::shared_ptr<ip::tcp::resolver> resolver(new ip::tcp::resolver(s1.get_executor()));
  		resolver->async_resolve(query,
  			boost::bind(&avsession::handle_resolve_remote,shared_from_this(),resolver,asio::placeholders::error,asio::placeholders::iterator)
  		);
