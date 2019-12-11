@@ -12,7 +12,9 @@
 	#endif
 #endif
 
-#include "sd-daemon.h"
+#ifdef HAVE_SYSTEMD
+#include "systemd/sd-daemon.h"
+#endif
 
 #include "splice.hpp"
 #include "avsession.hpp"
@@ -141,7 +143,7 @@ void avclient::typedetect(const boost::system::error_code& ec)
 		std::cout << "client mode" << std::endl;
 		// 检查是否被墙.
 		m_socket_client->async_read_some(boost::asio::null_buffers(),
-			boost::bind(&avclient::detect_ifgfwed, shared_from_this(), 
+			boost::bind(&avclient::detect_ifgfwed, shared_from_this(),
 				asio::placeholders::error, asio::placeholders::bytes_transferred, 0));
 
 	}
@@ -177,9 +179,9 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 	switch(state) {
 		case 0: // 读取客户端认证方式列表.
 			// 读取版本号和支持的认证数.
-			asio::read(*m_socket_client, asio::buffer(buffer, 2), ec_); 
+			asio::read(*m_socket_client, asio::buffer(buffer, 2), ec_);
 			// 读取支持的认证方法.
-			asio::read(*m_socket_client, asio::buffer(buffer, buffer[1]), ec_); 
+			asio::read(*m_socket_client, asio::buffer(buffer, buffer[1]), ec_);
 			// 告诉客户端，不需要认证.
 			asio::async_write(*m_socket_client, asio::buffer("\x05\x00", 2),
 				boost::bind(&avclient::detect_ifgfwed, shared_from_this(), _1, _2, 1));
@@ -212,6 +214,7 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 					host = endp.address().to_string();
 					port = endp.port();
 					start_socks5_helper();
+					return;
 				}
 				break;
 				case 0x03:
@@ -227,6 +230,10 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 							start_socks5_helper();
 							return;
 						}
+						else
+						{
+							std::cout << "good, " << host << " can be connected directly" << std::endl;
+						}
 					}
 					else
 					{
@@ -238,7 +245,7 @@ void avclient::detect_ifgfwed(const boost::system::error_code& ec, std::size_t b
 			}
 
 			boost::shared_ptr<avsession<avclient, asio::ip::tcp::socket,ip::tcp::socket> >
-				session(new avsession<avclient, asio::ip::tcp::socket, 
+				session(new avsession<avclient, asio::ip::tcp::socket,
 					ip::tcp::socket> (shared_from_this(), *m_socket_client, m_socket_server, auth));
 			session->start(host, port);
 			break;
@@ -331,7 +338,7 @@ void avclient::handle_socks5_auth(const boost::system::error_code& ec, std::size
 						data[pos++] = user_pass[1].size();
 						std::copy(user_pass[1].begin(), user_pass[1].end(), data+pos);
 						pos += user_pass[1].size();
-						m_sslstream->async_write_some(asio::buffer(data, pos), 
+						m_sslstream->async_write_some(asio::buffer(data, pos),
 							boost::bind(&avclient::handle_socks5_auth, shared_from_this(), _1, _2, 2));
 					}
 				}
@@ -374,7 +381,7 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 		{
 			// 客户端已经被授权了，那么，开始处理吧，支持 SOCKS5 协议哦!
 			boost::shared_ptr<avsession<avclient, ssl::stream<asio::ip::tcp::socket&>,ip::tcp::socket> >
-				session(new avsession<avclient, ssl::stream<asio::ip::tcp::socket&>, ip::tcp::socket> 
+				session(new avsession<avclient, ssl::stream<asio::ip::tcp::socket&>, ip::tcp::socket>
 					(shared_from_this(), *m_sslstream, m_socket_server, auth));
 			session->start();
 		}
@@ -382,7 +389,7 @@ void avclient::handle_ssl_handshake(const boost::system::error_code& ec)
 		{
 			if( config["auth"].empty() )
 			{
-				m_sslstream->async_write_some(asio::buffer("\x05\x01\x00"), 
+				m_sslstream->async_write_some(asio::buffer("\x05\x01\x00"),
 					boost::bind(&avclient::handle_socks5_auth, shared_from_this(), _1, _2, 0));
 			}
 			else

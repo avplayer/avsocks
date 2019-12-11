@@ -7,7 +7,7 @@ set(CMAKE_INSTALL_PREFIX /usr)
 # Common for all avplayer projects
 ######
 include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag(-std=c++11 HAS_CXX11)
+# check_cxx_compiler_flag(-std=c++11 HAS_CXX11)sd-
 if (HAS_CXX11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 endif()
@@ -70,9 +70,12 @@ if(USE_STATIC)
 	set(Boost_USE_STATIC_RUNTIME    ON)
 endif()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
 
 find_package(Boost 1.47 REQUIRED system program_options regex filesystem)
 find_package(Threads)
+find_package(systemd)
 
 include_directories(${OPENSSL_INCLUDE_DIR})
 link_libraries(${OPENSSL_LIBRARIES})
@@ -84,10 +87,15 @@ if(WIN32)
 endif()
 
 add_executable(avsocks
-	src/avauth.hpp src/gfwlist.hpp  src/sd-daemon.c
-	src/avsession.hpp  src/main.cpp     src/sd-daemon.h
+	src/avauth.hpp src/gfwlist.hpp
+	src/avsession.hpp  src/main.cpp
 	src/cert.hpp       src/pch.hpp      src/splice.hpp
 )
+
+if(SYSTEMD_FOUND)
+	target_link_libraries(avsocks ${SYSTEMD_LIBRARIES})
+	target_compile_definitions(avsocks PRIVATE -DHAVE_SYSTEMD)
+endif()
 
 target_link_libraries(avsocks ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
